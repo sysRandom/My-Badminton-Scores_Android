@@ -1,0 +1,34 @@
+<resources>
+    <string name="app_name">My Badminton Scores</string>
+
+    <string name="login_title">Social Media Login</string>
+    <string name="new_match_title">Add New Match</string>
+    <string name="facebook_app_id">467811920086939</string>
+    <string name="member_login_api_url">https://devel.xs-tech.sg/api/public/member/login</string>
+    <string name="member_update_api_url">https://devel.xs-tech.sg/api/public/member/update</string>
+
+    <string name="add_match_button">New Match</string>
+    <string name="add_match_title">New Match</string>
+    <string name="add_match_label_date">Match Date:</string>
+    <string name="add_match_button_date">Today</string>
+    <string name="add_match_label_match_type">Match Type:</string>
+    <string name="add_match_match_type_1v1">Singles</string>
+    <string name="add_match_match_type_2v2">Doubles</string>
+    <string name="add_match_score_team">Team Score:</string>
+    <string name="add_match_score_opponent">Opponent Score:</string>
+    <string name="add_match_select_players">Select Players</string>
+    <string name="add_match_submit_match">Submit Match</string>
+
+    <string name="select_players_title">Choose players</string>
+    <string name="select_players_team">Player Team</string>
+    <string name="select_players_opponent">Opponent</string>
+    <string name="select_players_player1">Player 1</string>
+    <string name="select_fb_player1">FB Player 1</string>
+    <string name="select_players_player2">Player 2</string>
+    <string name="select_fb_player2">FB Player 2</string>
+    <string name="select_players_submit">Submit Players</string>
+
+    <string name="friends_list_title">Friends</string>
+
+    <string name="list_match_button">View Match History</string>
+</resources>
