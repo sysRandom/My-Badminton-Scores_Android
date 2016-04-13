@@ -28,6 +28,10 @@
     <string name="select_fb_player2">FB Player 2</string>
     <string name="select_players_submit">Submit Players</string>
 
+    <string name="player_name_prompt">Enter player name:</string>
+    <string name="player_name_submit">Confirm player</string>
+    <string name="player_name_cancel">Cancel</string>
+
     <string name="friends_list_title">Friends</string>
 
     <string name="list_match_button">View Match History</string>
