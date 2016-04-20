@@ -79,6 +79,7 @@ public class SelectPlayers extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
+                    etName.setText("");
                     if (mPlayerList.has("TeamPlayer1")) {
                         if (!mPlayerList.getString("TeamPlayer1").isEmpty()) {
                             etName.setText(String.format("%s", mPlayerList.getString("TeamPlayer1")));
@@ -95,12 +96,10 @@ public class SelectPlayers extends AppCompatActivity {
                                             mPlayerList.put("TeamPlayer1", etName.getText().toString());
                                         }
                                         etName.setText("");
-//                                        ((ViewGroup)player_name_dialog.getParent()).removeAllViews();
                                     }
                                     else {
                                         Log.i(this.toString(), "Team Player 1 has no name");
                                         mPlayerList.remove("TeamPlayer1");
-//                                        ((ViewGroup)player_name_dialog.getParent()).removeAllViews();
                                     }
                                 }
                                 else {
@@ -108,7 +107,6 @@ public class SelectPlayers extends AppCompatActivity {
                                         Log.i(this.toString(), "Team Player 1 name is " + etName.getText().toString());
                                         mPlayerList.put("TeamPlayer1", etName.getText().toString());
                                         etName.setText("");
-//                                        ((ViewGroup)player_name_dialog.getParent()).removeAllViews();
                                     }
                                 }
                                 ((ViewGroup)player_name_dialog.getParent()).removeAllViews();
@@ -139,6 +137,7 @@ public class SelectPlayers extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
+                    etName.setText("");
                     if (mPlayerList.has("OpponentPlayer1")) {
                         if (!mPlayerList.getString("OpponentPlayer1").isEmpty()) {
                             etName.setText(String.format("%s", mPlayerList.getString("OpponentPlayer1")));
@@ -186,7 +185,8 @@ public class SelectPlayers extends AppCompatActivity {
                     playerDialog.show();
                 } catch (JSONException e) {
                     e.printStackTrace();
-                }            }
+                }
+            }
         });
         mFbOpponentPlayer1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -209,26 +209,53 @@ public class SelectPlayers extends AppCompatActivity {
             mTeamPlayer2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mPlayerName.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            if (etName.getText().length() > 0) {
-                                Log.i(this.toString(), "Team Player 2 name is " + etName.getText().toString());
-                                etName.setText("");
+                    try {
+                        etName.setText("");
+                        if (mPlayerList.has("TeamPlayer2")) {
+                            if (!mPlayerList.getString("TeamPlayer2").isEmpty()) {
+                                etName.setText(String.format("%s",mPlayerList.getString("TeamPlayer2")));
+                            }
+                        }
+                        mPlayerName.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                try {
+                                    if (mPlayerList.has("TeamPlayer2")) {
+                                        if (etName.getText().length() > 0) {
+                                            Log.i(this.toString(), "Team Player 2 name is " + etName.getText().toString());
+                                            if (etName.getText().toString() != mPlayerList.getString("TeamPlayer2")) {
+                                                mPlayerList.put("TeamPlayer2", etName.getText().toString());
+                                            }
+                                            etName.setText("");
+                                        } else {
+                                            Log.i(this.toString(), "Team Player 2 has no name");
+                                            mPlayerList.remove("TeamPlayer2");
+                                        }
+                                    }
+                                    else {
+                                        if (etName.getText().length() > 0) {
+                                            Log.i(this.toString(),"Team Player 2 name is " + etName.getText().toString());
+                                            mPlayerList.put("TeamPlayer2",etName.getText().toString());
+                                            etName.setText("");
+                                        }
+                                    }
+                                    ((ViewGroup)player_name_dialog.getParent()).removeAllViews();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Log.i(this.toString(), "Team Player 2 name cancelled");
                                 ((ViewGroup)player_name_dialog.getParent()).removeAllViews();
                             }
-                            else {
-                                Log.i(this.toString(), "Team Player 2 has no name");
-                            }
-                        }
-                    }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Log.i(this.toString(), "Team Player 2 name cancelled");
-                        }
-                    });
-                    final AlertDialog playerDialog = mPlayerName.create();
-                    playerDialog.show();
+                        });
+                        final AlertDialog playerDialog = mPlayerName.create();
+                        playerDialog.show();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             });
             mFbTeamPlayer2.setOnClickListener(new View.OnClickListener() {
@@ -239,26 +266,53 @@ public class SelectPlayers extends AppCompatActivity {
             mOpponentPlayer2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mPlayerName.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            if (etName.getText().length() > 0) {
-                                Log.i(this.toString(), "Opponent Player 2 name is " + etName.getText().toString());
-                                etName.setText("");
+                    try {
+                        etName.setText("");
+                        if (mPlayerList.has("OpponentPlayer2")) {
+                            if (!mPlayerList.getString("OpponentPlayer2").isEmpty()) {
+                                etName.setText(String.format("%s",mPlayerList.getString("OpponentPlayer2")));
+                            }
+                        }
+                        mPlayerName.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                try {
+                                    if (mPlayerList.has("OpponentPlayer2")) {
+                                        if (etName.getText().length() > 0) {
+                                            Log.i(this.toString(), "(281) Opponent Player 2 name is " + etName.getText().toString());
+                                            if (etName.getText().toString() != mPlayerList.getString("OpponentPlayer2")) {
+                                                mPlayerList.put("OpponentPlayer2",etName.getText().toString());
+                                            }
+                                            etName.setText("");
+                                        } else {
+                                            Log.i(this.toString(), "Opponent Player 2 has no name");
+                                            mPlayerList.remove("OpponentPlayer2");
+                                        }
+                                    }
+                                    else {
+                                        if (etName.getText().length() > 0) {
+                                            Log.i(this.toString(),"(293) Opponent Player 2 name is " + etName.getText().toString());
+                                            mPlayerList.put("OpponentPlayer2",etName.getText().toString());
+                                            etName.setText("");
+                                        }
+                                    }
+                                    ((ViewGroup)player_name_dialog.getParent()).removeAllViews();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Log.i(this.toString(), "Opponent Player 2 name cancelled");
                                 ((ViewGroup)player_name_dialog.getParent()).removeAllViews();
                             }
-                            else {
-                                Log.i(this.toString(), "Opponent Player 2 has no name");
-                            }
-                        }
-                    }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Log.i(this.toString(), "Opponent Player 2 name cancelled");
-                        }
-                    });
-                    final AlertDialog playerDialog = mPlayerName.create();
-                    playerDialog.show();
+                        });
+                        final AlertDialog playerDialog = mPlayerName.create();
+                        playerDialog.show();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             });
             mFbOpponentPlayer2.setOnClickListener(new View.OnClickListener() {
@@ -287,66 +341,118 @@ public class SelectPlayers extends AppCompatActivity {
             mOpponentPlayer2 = (Button) findViewById(R.id.opponent_player2);
             mFbOpponentPlayer2 = (Button) findViewById(R.id.fb_opponent_player2);
 
-            mTeamPlayer2.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mPlayerName.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            if (etName.getText().length() > 0) {
-                                Log.i(this.toString(), "Team Player 2 name is " + etName.getText().toString());
-                                etName.setText("");
-                                ((ViewGroup)player_name_dialog.getParent()).removeAllViews();
-                            }
-                            else {
-                                Log.i(this.toString(), "Team Player 2 has no name");
-                            }
-                        }
-                    }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Log.i(this.toString(), "Team Player 2 name cancelled");
-                        }
-                    });
-                    final AlertDialog playerDialog = mPlayerName.create();
-                    playerDialog.show();
-                }
-            });
-            mFbTeamPlayer2.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                }
-            });
-            mOpponentPlayer2.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mPlayerName.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            if (etName.getText().length() > 0) {
-                                Log.i(this.toString(), "Opponent Player 2 name is " + etName.getText().toString());
-                                etName.setText("");
-                                ((ViewGroup)player_name_dialog.getParent()).removeAllViews();
-                            }
-                            else {
-                                Log.i(this.toString(), "Opponent Player 2 has no name");
-                            }
-                        }
-                    }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Log.i(this.toString(), "Opponent Player 2 name cancelled");
-                        }
-                    });
-                    final AlertDialog playerDialog = mPlayerName.create();
-                    playerDialog.show();
-                }
-            });
-            mFbOpponentPlayer2.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                }
-            });
+//            mTeamPlayer2.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    try {
+//                        if (mPlayerList.has("TeamPlayer2")) {
+//                            if (!mPlayerList.getString("TeamPlayer2").isEmpty()) {
+//                                etName.setText(String.format("%s",mPlayerList.getString("TeamPlayer2")));
+//                            }
+//                        }
+//                        mPlayerName.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                try {
+//                                    if (mPlayerList.has("TeamPlayer2")) {
+//                                        if (etName.getText().length() > 0) {
+//                                            Log.i(this.toString(), "Team Player 2 name is " + etName.getText().toString());
+//                                            if (etName.getText().toString() != mPlayerList.getString("TeamPlayer2")) {
+//                                                mPlayerList.put("TeamPlayer2",etName.getText().toString());
+//                                            }
+//                                            etName.setText("");
+//                                        } else {
+//                                            Log.i(this.toString(), "Team Player 2 has no name");
+//                                            mPlayerList.remove("TeamPlayer2");
+//                                        }
+//                                    }
+//                                    else {
+//                                        if (etName.getText().length() > 0) {
+//                                            Log.i(this.toString(), "Team Player 2 name is " + etName.getText().toString());
+//                                            mPlayerList.put("TeamPlayer2",etName.getText().toString());
+//                                            etName.setText("");
+//                                        }
+//                                    }
+//                                    ((ViewGroup)player_name_dialog.getParent()).removeAllViews();
+//                                } catch (JSONException e) {
+//                                    e.printStackTrace();
+//                                }
+//                            }
+//                        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                Log.i(this.toString(), "Team Player 2 name cancelled");
+//                                ((ViewGroup)player_name_dialog.getParent()).removeAllViews();
+//                            }
+//                        });
+//                        final AlertDialog playerDialog = mPlayerName.create();
+//                        playerDialog.show();
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            });
+//            mFbTeamPlayer2.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                }
+//            });
+//            mOpponentPlayer2.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    try {
+//                        if (mPlayerList.has("OpponentPlayer2")) {
+//                            if (!mPlayerList.getString("OpponentPlayer2").isEmpty()) {
+//                                etName.setText(String.format("%s",mPlayerList.getString("OpponentPlayer2")));
+//                            }
+//                        }
+//                        mPlayerName.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                try {
+//                                    if (mPlayerList.has("OpponentPlayer2")) {
+//                                        if (etName.getText().length() > 0) {
+//                                            Log.i(this.toString(), "(414) Opponent Player 2 name is " + etName.getText().toString());
+//                                            if (etName.getText().toString() != mPlayerList.getString("OpponentPlayer2")) {
+//                                                mPlayerList.put("OpponentPlayer2",etName.getText().toString());
+//                                            }
+//                                            etName.setText("");
+//                                        } else {
+//                                            Log.i(this.toString(), "Opponent Player 2 has no name");
+//                                            mPlayerList.remove("OpponentPlayer2");
+//                                        }
+//                                    }
+//                                    else {
+//                                        if (etName.getText().length() > 0) {
+//                                            Log.i(this.toString(),"(426) Opponent Player 2 name is " + etName.getText().toString());
+//                                            mPlayerList.put("OpponentPlayer2",etName.getText().toString());
+//                                            etName.setText("");
+//                                        }
+//                                    }
+//                                    ((ViewGroup)player_name_dialog.getParent()).removeAllViews();
+//                                } catch (JSONException e) {
+//                                    e.printStackTrace();
+//                                }
+//                            }
+//                        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                Log.i(this.toString(), "Opponent Player 2 name cancelled");
+//                                ((ViewGroup)player_name_dialog.getParent()).removeAllViews();
+//                            }
+//                        });
+//                        final AlertDialog playerDialog = mPlayerName.create();
+//                        playerDialog.show();
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            });
+//            mFbOpponentPlayer2.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                }
+//            });
 
             mTeamPlayer2.setVisibility(View.GONE);
             mOpponentPlayer2.setVisibility(View.GONE);
