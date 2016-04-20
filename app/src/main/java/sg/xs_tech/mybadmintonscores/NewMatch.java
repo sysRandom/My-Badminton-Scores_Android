@@ -15,7 +15,6 @@ import android.widget.RadioButton;
 
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
-import com.facebook.GraphRequestAsyncTask;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
 
@@ -45,6 +44,7 @@ public class NewMatch extends AppCompatActivity implements DatePickerDialog.OnDa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_match);
+
         btnDatePicker = (Button) findViewById(R.id.date_picker);
         btnSubmitMatch = (Button) findViewById(R.id.submit_match);
         btnSelectPlayers = (Button) findViewById(R.id.select_players);
@@ -76,7 +76,7 @@ public class NewMatch extends AppCompatActivity implements DatePickerDialog.OnDa
         btnSelectPlayers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                GraphRequestAsyncTask graphRequestAsyncTask = new GraphRequest(
+                new GraphRequest(
                         AccessToken.getCurrentAccessToken(), "/me/friends", null, HttpMethod.GET,
                         new GraphRequest.Callback() {
                             @Override
