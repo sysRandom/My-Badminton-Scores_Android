@@ -13,6 +13,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,6 +25,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class SelectPlayers extends AppCompatActivity {
+
+    static final int PICK_PLAYER = 1;
 
     private Button mTeamPlayer1;
     private Button mTeamPlayer2;
@@ -36,16 +43,14 @@ public class SelectPlayers extends AppCompatActivity {
     private Button mSubmitPlayer;
     private TextView mFriendStats;
 
-    private JSONArray mFriendsList = new JSONArray();
-    private ArrayList<String> mFriends = new ArrayList<>();
-//    private Integer mMatchType;
+    private ArrayList<Friend> mFriendsList;
+    private int mFriendsCount;
+    private final JSONObject mPlayerList = new JSONObject();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_players);
-
-        final JSONObject mPlayerList = new JSONObject();
 
         LayoutInflater layoutInflater = LayoutInflater.from(this);
         final View player_name_dialog = layoutInflater.inflate(R.layout.player_name_dialog, null);
@@ -55,16 +60,7 @@ public class SelectPlayers extends AppCompatActivity {
 
         Intent intent = getIntent();
         Integer mMatchType = intent.getIntExtra("match_type", 0);
-        final String mFriendsString = intent.getStringExtra("friends"); // response.getJSONObject().getJSONArray("data");
-        try {
-            mFriendsList = new JSONArray(mFriendsString);
-            for (int i=0; i < mFriendsList.length(); i++) {
-                mFriends.add(mFriendsList.getJSONObject(i).getString("name"));
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
+        mFriendsCount = intent.getIntExtra("friends_count", 0);
         Log.i(this.toString(), "Match Type: " + mMatchType);
 
         mTeamPlayer1 = (Button) findViewById(R.id.team_player1);
@@ -92,24 +88,22 @@ public class SelectPlayers extends AppCompatActivity {
                                 if (mPlayerList.has("TeamPlayer1")) {
                                     if (etName.getText().length() > 0) {
                                         Log.i(this.toString(), "Team Player 1 name is " + etName.getText().toString());
-                                        if (etName.getText().toString() != mPlayerList.getString("TeamPlayer1")) {
+                                        if (!etName.getText().toString().equalsIgnoreCase(mPlayerList.getString("TeamPlayer1"))) {
                                             mPlayerList.put("TeamPlayer1", etName.getText().toString());
                                         }
                                         etName.setText("");
-                                    }
-                                    else {
+                                    } else {
                                         Log.i(this.toString(), "Team Player 1 has no name");
                                         mPlayerList.remove("TeamPlayer1");
                                     }
-                                }
-                                else {
+                                } else {
                                     if (etName.getText().length() > 0) {
                                         Log.i(this.toString(), "Team Player 1 name is " + etName.getText().toString());
                                         mPlayerList.put("TeamPlayer1", etName.getText().toString());
                                         etName.setText("");
                                     }
                                 }
-                                ((ViewGroup)player_name_dialog.getParent()).removeAllViews();
+                                ((ViewGroup) player_name_dialog.getParent()).removeAllViews();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -118,7 +112,7 @@ public class SelectPlayers extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             Log.i(this.toString(), "Team Player 1 name cancelled");
-                            ((ViewGroup)player_name_dialog.getParent()).removeAllViews();
+                            ((ViewGroup) player_name_dialog.getParent()).removeAllViews();
                         }
                     });
                     final AlertDialog playerDialog = mPlayerName.create();
@@ -131,6 +125,11 @@ public class SelectPlayers extends AppCompatActivity {
         mFbTeamPlayer1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                try {
+                    getFacebookFriends();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
         mOpponentPlayer1.setOnClickListener(new View.OnClickListener() {
@@ -150,26 +149,24 @@ public class SelectPlayers extends AppCompatActivity {
                                 if (mPlayerList.has("OpponentPlayer1")) {
                                     if (etName.getText().length() > 0) {
                                         Log.i(this.toString(), "Opponent Player 1 name is " + etName.getText().toString());
-                                        if (etName.getText().toString() != mPlayerList.getString("OpponentPlayer1")) {
+                                        if (!etName.getText().toString().equalsIgnoreCase(mPlayerList.getString("OpponentPlayer1"))) {
                                             mPlayerList.put("OpponentPlayer1", etName.getText().toString());
                                         }
                                         etName.setText("");
 //                                            ((ViewGroup)player_name_dialog.getParent()).removeAllViews();
-                                    }
-                                    else {
+                                    } else {
                                         Log.i(this.toString(), "Opponent Player 1 has no name");
                                         mPlayerList.remove("OpponentPlayer1");
 //                                            ((ViewGroup)player_name_dialog.getParent()).removeAllViews();
                                     }
-                                }
-                                else {
+                                } else {
                                     if (etName.getText().length() > 0) {
                                         Log.i(this.toString(), "Opponent Player 1 name is " + etName.getText().toString());
                                         mPlayerList.put("OpponentPlayer1", etName.getText().toString());
                                         etName.setText("");
                                     }
                                 }
-                                ((ViewGroup)player_name_dialog.getParent()).removeAllViews();
+                                ((ViewGroup) player_name_dialog.getParent()).removeAllViews();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -213,7 +210,7 @@ public class SelectPlayers extends AppCompatActivity {
                         etName.setText("");
                         if (mPlayerList.has("TeamPlayer2")) {
                             if (!mPlayerList.getString("TeamPlayer2").isEmpty()) {
-                                etName.setText(String.format("%s",mPlayerList.getString("TeamPlayer2")));
+                                etName.setText(String.format("%s", mPlayerList.getString("TeamPlayer2")));
                             }
                         }
                         mPlayerName.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -223,7 +220,7 @@ public class SelectPlayers extends AppCompatActivity {
                                     if (mPlayerList.has("TeamPlayer2")) {
                                         if (etName.getText().length() > 0) {
                                             Log.i(this.toString(), "Team Player 2 name is " + etName.getText().toString());
-                                            if (etName.getText().toString() != mPlayerList.getString("TeamPlayer2")) {
+                                            if (!etName.getText().toString().equalsIgnoreCase(mPlayerList.getString("TeamPlayer2"))) {
                                                 mPlayerList.put("TeamPlayer2", etName.getText().toString());
                                             }
                                             etName.setText("");
@@ -231,15 +228,14 @@ public class SelectPlayers extends AppCompatActivity {
                                             Log.i(this.toString(), "Team Player 2 has no name");
                                             mPlayerList.remove("TeamPlayer2");
                                         }
-                                    }
-                                    else {
+                                    } else {
                                         if (etName.getText().length() > 0) {
-                                            Log.i(this.toString(),"Team Player 2 name is " + etName.getText().toString());
-                                            mPlayerList.put("TeamPlayer2",etName.getText().toString());
+                                            Log.i(this.toString(), "Team Player 2 name is " + etName.getText().toString());
+                                            mPlayerList.put("TeamPlayer2", etName.getText().toString());
                                             etName.setText("");
                                         }
                                     }
-                                    ((ViewGroup)player_name_dialog.getParent()).removeAllViews();
+                                    ((ViewGroup) player_name_dialog.getParent()).removeAllViews();
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -248,7 +244,7 @@ public class SelectPlayers extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 Log.i(this.toString(), "Team Player 2 name cancelled");
-                                ((ViewGroup)player_name_dialog.getParent()).removeAllViews();
+                                ((ViewGroup) player_name_dialog.getParent()).removeAllViews();
                             }
                         });
                         final AlertDialog playerDialog = mPlayerName.create();
@@ -270,7 +266,7 @@ public class SelectPlayers extends AppCompatActivity {
                         etName.setText("");
                         if (mPlayerList.has("OpponentPlayer2")) {
                             if (!mPlayerList.getString("OpponentPlayer2").isEmpty()) {
-                                etName.setText(String.format("%s",mPlayerList.getString("OpponentPlayer2")));
+                                etName.setText(String.format("%s", mPlayerList.getString("OpponentPlayer2")));
                             }
                         }
                         mPlayerName.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -280,23 +276,22 @@ public class SelectPlayers extends AppCompatActivity {
                                     if (mPlayerList.has("OpponentPlayer2")) {
                                         if (etName.getText().length() > 0) {
                                             Log.i(this.toString(), "(281) Opponent Player 2 name is " + etName.getText().toString());
-                                            if (etName.getText().toString() != mPlayerList.getString("OpponentPlayer2")) {
-                                                mPlayerList.put("OpponentPlayer2",etName.getText().toString());
+                                            if (!etName.getText().toString().equalsIgnoreCase(mPlayerList.getString("OpponentPlayer2"))) {
+                                                mPlayerList.put("OpponentPlayer2", etName.getText().toString());
                                             }
                                             etName.setText("");
                                         } else {
                                             Log.i(this.toString(), "Opponent Player 2 has no name");
                                             mPlayerList.remove("OpponentPlayer2");
                                         }
-                                    }
-                                    else {
+                                    } else {
                                         if (etName.getText().length() > 0) {
-                                            Log.i(this.toString(),"(293) Opponent Player 2 name is " + etName.getText().toString());
-                                            mPlayerList.put("OpponentPlayer2",etName.getText().toString());
+                                            Log.i(this.toString(), "(293) Opponent Player 2 name is " + etName.getText().toString());
+                                            mPlayerList.put("OpponentPlayer2", etName.getText().toString());
                                             etName.setText("");
                                         }
                                     }
-                                    ((ViewGroup)player_name_dialog.getParent()).removeAllViews();
+                                    ((ViewGroup) player_name_dialog.getParent()).removeAllViews();
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -305,7 +300,7 @@ public class SelectPlayers extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 Log.i(this.toString(), "Opponent Player 2 name cancelled");
-                                ((ViewGroup)player_name_dialog.getParent()).removeAllViews();
+                                ((ViewGroup) player_name_dialog.getParent()).removeAllViews();
                             }
                         });
                         final AlertDialog playerDialog = mPlayerName.create();
@@ -321,20 +316,18 @@ public class SelectPlayers extends AppCompatActivity {
                 }
             });
 
-            if (mFriendsList.length() < 1) {
+            if (mFriendsCount < 1) {
                 mFbTeamPlayer1.setVisibility(View.GONE);
                 mFbTeamPlayer2.setVisibility(View.GONE);
                 mFbOpponentPlayer1.setVisibility(View.GONE);
                 mFbOpponentPlayer2.setVisibility(View.GONE);
-            }
-            else {
+            } else {
                 mTeamPlayer2.setVisibility(View.VISIBLE);
                 mFbTeamPlayer2.setVisibility(View.VISIBLE);
                 mOpponentPlayer2.setVisibility(View.VISIBLE);
                 mFbOpponentPlayer2.setVisibility(View.VISIBLE);
             }
-        }
-        else {
+        } else {
             // Singles
             mTeamPlayer2 = (Button) findViewById(R.id.team_player2);
             mFbTeamPlayer2 = (Button) findViewById(R.id.fb_team_player2);
@@ -459,9 +452,54 @@ public class SelectPlayers extends AppCompatActivity {
             mFbTeamPlayer2.setVisibility(View.GONE);
             mFbOpponentPlayer2.setVisibility(View.GONE);
 
-            if (mFriendsList.length() < 1) {
+            if (mFriendsCount < 1) {
                 mFbTeamPlayer1.setVisibility(View.GONE);
                 mFbOpponentPlayer1.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    private void getFacebookFriends() {
+        new GraphRequest(
+                AccessToken.getCurrentAccessToken(), "/me/friends", null, HttpMethod.GET,
+                new GraphRequest.Callback() {
+                    @Override
+                    public void onCompleted(GraphResponse response) {
+                        Log.i(this.toString(), "Friends List Result: " + response.toString());
+                        try {
+                            JSONArray mFriends = response.getJSONObject().getJSONArray("data");
+                            JSONObject mSummary = response.getJSONObject().getJSONObject("summary");
+                            Log.i(this.toString(), "Friends List Array: " + mFriends.toString());
+                            Log.i(this.toString(), "Friends List Summary: " + mSummary.getInt("total_count"));
+                            Log.i(this.toString(), String.format(
+                                    "Avail friends: %d, total friends: %d",
+                                    mFriends.length(), mSummary.getInt("total_count")
+                            ));
+                            for (int i = 0; i < mFriends.length(); ++i) {
+                                JSONObject friend = mFriends.getJSONObject(i);
+                                Friend mFriend = new Friend(friend.getString("id"), friend.getString("name"));
+                                if (!friend.getString("email").isEmpty()) {
+                                    mFriend.setEmail(friend.getString("email"));
+                                }
+                                mFriendsList.add(mFriend);
+                            }
+                            Intent intent = new Intent(SelectPlayers.this, FriendsList.class);
+                            intent.putExtra("friends_list", mFriendsList);
+                            startActivityForResult(intent, PICK_PLAYER);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+        ).executeAsync();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == PICK_PLAYER) {
+                Log.i(this.toString(), "");
             }
         }
     }
