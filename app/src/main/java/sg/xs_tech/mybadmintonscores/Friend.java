@@ -7,6 +7,7 @@ public class Friend implements Parcelable {
     private String id;
     private String fname;
     private String email;
+    private String profile_picture_url;
 
     public Friend(String fname) {
         this.fname = fname;
@@ -69,5 +70,13 @@ public class Friend implements Parcelable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getProfile_picture_url() {
+        return profile_picture_url;
+    }
+
+    public void setProfile_picture_url(String profile_picture_url) {
+        this.profile_picture_url = profile_picture_url;
     }
 }
