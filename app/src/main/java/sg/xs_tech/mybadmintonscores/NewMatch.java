@@ -23,6 +23,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Calendar;
+import java.util.Locale;
 
 public class NewMatch extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     static final int PICK_PLAYERS = 1;
@@ -55,7 +56,7 @@ public class NewMatch extends AppCompatActivity implements DatePickerDialog.OnDa
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        btnDatePicker.setText(String.format("%d-%d-%d",day,month,year));
+        btnDatePicker.setText(String.format(Locale.getDefault(),"%d-%d-%d",day,month,year));
         btnSubmitMatch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,6 +77,9 @@ public class NewMatch extends AppCompatActivity implements DatePickerDialog.OnDa
         btnSelectPlayers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//                Intent intent = new Intent(NewMatch.this, SelectPlayers.class);
+//                intent.putExtra("match_type", mMatchType);
+//                startActivity(intent);
                 new GraphRequest(
                         AccessToken.getCurrentAccessToken(), "/me/friends", null, HttpMethod.GET,
                         new GraphRequest.Callback() {
@@ -93,8 +97,10 @@ public class NewMatch extends AppCompatActivity implements DatePickerDialog.OnDa
                                     ));
                                     Intent intent = new Intent(NewMatch.this, SelectPlayers.class);
                                     intent.putExtra("match_type", mMatchType);
-                                    intent.putExtra("friends", mFriends.toString());
-                                    startActivityForResult(intent, PICK_PLAYERS);
+                                    intent.putExtra("friends_count", mSummary.getInt("total_count"));
+//                                    intent.putExtra("friends", mFriends.toString());
+//                                    startActivityForResult(intent, PICK_PLAYERS);
+                                    startActivity(intent);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -105,15 +111,15 @@ public class NewMatch extends AppCompatActivity implements DatePickerDialog.OnDa
         });
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            if (requestCode == PICK_PLAYERS) {
-                Log.i(this.toString(), "");
-            }
-        }
-    }
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (resultCode == RESULT_OK) {
+//            if (requestCode == PICK_PLAYERS) {
+//                Log.i(this.toString(), "");
+//            }
+//        }
+//    }
 
     public void showDatePickerDialog(View view) {
         DialogFragment dialogFragment = new DatePickerFragment();
@@ -139,7 +145,7 @@ public class NewMatch extends AppCompatActivity implements DatePickerDialog.OnDa
     @Override
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
 //        Button btnDate = (Button) view.findViewById(R.id.date_picker);
-        btnDatePicker.setText(String.format("%d-%d-%d", dayOfMonth, monthOfYear, year));
+        btnDatePicker.setText(String.format(Locale.getDefault(),"%d-%d-%d", dayOfMonth, monthOfYear, year));
     }
 
     public static class DatePickerFragment extends DialogFragment {
