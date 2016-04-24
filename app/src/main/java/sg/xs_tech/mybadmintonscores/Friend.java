@@ -1,6 +1,9 @@
 package sg.xs_tech.mybadmintonscores;
 
-public class Friend {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Friend implements Parcelable {
     private String id;
     private String fname;
     private String email;
@@ -13,6 +16,36 @@ public class Friend {
         this.id = id;
         this.fname = fname;
     }
+
+    protected Friend(Parcel in) {
+        id = in.readString();
+        fname = in.readString();
+        email = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(fname);
+        dest.writeString(email);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Friend> CREATOR = new Creator<Friend>() {
+        @Override
+        public Friend createFromParcel(Parcel in) {
+            return new Friend(in);
+        }
+
+        @Override
+        public Friend[] newArray(int size) {
+            return new Friend[size];
+        }
+    };
 
     protected String getId() {
         return id;
