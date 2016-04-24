@@ -43,7 +43,7 @@ public class SelectPlayers extends AppCompatActivity {
     private Button mSubmitPlayer;
     private TextView mFriendStats;
 
-    private ArrayList<Friend> mFriendsList;
+    private ArrayList<Friend> mFriendsList = new ArrayList<>();
     private int mFriendsCount;
     private final JSONObject mPlayerList = new JSONObject();
 
@@ -467,7 +467,7 @@ public class SelectPlayers extends AppCompatActivity {
                     public void onCompleted(GraphResponse response) {
                         Log.i(this.toString(), "Friends List Result: " + response.toString());
                         try {
-                            JSONArray mFriends = response.getJSONObject().getJSONArray("data");
+                            final JSONArray mFriends = response.getJSONObject().getJSONArray("data");
                             JSONObject mSummary = response.getJSONObject().getJSONObject("summary");
                             Log.i(this.toString(), "Friends List Array: " + mFriends.toString());
                             Log.i(this.toString(), "Friends List Summary: " + mSummary.getInt("total_count"));
@@ -477,14 +477,14 @@ public class SelectPlayers extends AppCompatActivity {
                             ));
                             for (int i = 0; i < mFriends.length(); ++i) {
                                 JSONObject friend = mFriends.getJSONObject(i);
-                                Friend mFriend = new Friend(friend.getString("id"), friend.getString("name"));
-                                if (!friend.getString("email").isEmpty()) {
+                                final Friend mFriend = new Friend(friend.getString("id"), friend.getString("name"));
+                                if (friend.has("email") && !friend.getString("email").isEmpty()) {
                                     mFriend.setEmail(friend.getString("email"));
                                 }
                                 mFriendsList.add(mFriend);
                             }
                             Intent intent = new Intent(SelectPlayers.this, FriendsList.class);
-                            intent.putExtra("friends_list", mFriendsList);
+                            intent.putExtra("fbFriends", mFriendsList);
                             startActivityForResult(intent, PICK_PLAYER);
                         } catch (JSONException e) {
                             e.printStackTrace();
