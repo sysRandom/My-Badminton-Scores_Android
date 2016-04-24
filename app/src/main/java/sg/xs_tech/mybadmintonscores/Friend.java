@@ -5,9 +5,9 @@ import android.os.Parcelable;
 
 public class Friend implements Parcelable {
     private String id;
-    private String fname;
-    private String email;
-    private String profile_picture_url;
+    private String fname = "";
+    private String email = "";
+    private String profile_picture_url = "";
 
     public Friend(String fname) {
         this.fname = fname;
