@@ -2,7 +2,6 @@ package sg.xs_tech.mybadmintonscores;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,10 +19,8 @@ import com.facebook.HttpMethod;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 public class FriendAdapter extends ArrayAdapter<Friend> {
     private ImageView ivProfilePic;
@@ -61,10 +58,13 @@ public class FriendAdapter extends ArrayAdapter<Friend> {
                                         Log.i(this.toString(),"Profile URL: " + mData.getString("url"));
                                         selected.setProfile_picture_url(mData.getString("url"));
                                     }
-                                    ivProfilePic.setImageBitmap(getFacebookProfilePicture(selected.getProfile_picture_url()));
+                                    final Bitmap mProfilePicture = new DownloadProfilePictureTask().execute(selected.getProfile_picture_url()).get();
+                                    ivProfilePic.setImageBitmap(mProfilePicture);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
-                                } catch (IOException e) {
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                } catch (ExecutionException e) {
                                     e.printStackTrace();
                                 }
                             }
@@ -72,21 +72,14 @@ public class FriendAdapter extends ArrayAdapter<Friend> {
                 ).executeAsync();
             }
             else {
-                ivProfilePic.setImageBitmap(getFacebookProfilePicture(selected.getProfile_picture_url()));
+                final Bitmap mProfilePicture = new DownloadProfilePictureTask().execute(selected.getProfile_picture_url()).get();
+                ivProfilePic.setImageBitmap(mProfilePicture);
             }
-        } catch (IOException e) {
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
             e.printStackTrace();
         }
         return convertView; // super.getView(position, convertView, parent);
-    }
-
-    public static Bitmap getFacebookProfilePicture(String url) throws IOException {
-        // Put to AsyncTask
-        Log.i("FacebookProfilePicture","Profile URL: " + url);
-        Bitmap picture;
-        InputStream in = (InputStream) new URL(url).getContent();
-        picture = BitmapFactory.decodeStream(in);
-        in.close();
-        return picture;
     }
 }
