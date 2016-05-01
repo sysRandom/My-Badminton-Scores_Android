@@ -1,5 +1,6 @@
 package sg.xs_tech.mybadmintonscores;
 
+import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -8,6 +9,7 @@ public class Friend implements Parcelable {
     private String fname = "";
     private String email = "";
     private String profile_picture_url = "";
+    private Bitmap profile_picture;
 
     public Friend(String fname) {
         this.fname = fname;
@@ -78,5 +80,11 @@ public class Friend implements Parcelable {
 
     public void setProfile_picture_url(String profile_picture_url) {
         this.profile_picture_url = profile_picture_url;
+    }
+    public Bitmap getProfile_picture() {
+        return profile_picture;
+    }
+    public void setProfile_picture(Bitmap profile_picture) {
+        this.profile_picture = profile_picture;
     }
 }
