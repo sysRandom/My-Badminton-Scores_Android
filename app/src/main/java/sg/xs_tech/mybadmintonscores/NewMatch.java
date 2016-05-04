@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -140,6 +141,18 @@ public class NewMatch extends AppCompatActivity implements DatePickerDialog.OnDa
                 mMatchType = 0;
                 break;
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        Log.i(this.toString(), "NewMatch save instance state");
+        super.onSaveInstanceState(outState, outPersistentState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        Log.i(this.toString(), "NewMatch restore instance state");
+        super.onRestoreInstanceState(savedInstanceState);
     }
 
     @Override
