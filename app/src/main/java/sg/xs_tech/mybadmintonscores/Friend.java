@@ -93,6 +93,7 @@ public class Friend implements Parcelable {
         if (id.isEmpty()) return;
         Bundle param = new Bundle();
         param.putBoolean("redirect", false);
+        param.putString("type","large");
         new GraphRequest(
                 AccessToken.getCurrentAccessToken(),
                 "/" + id + "/picture",
