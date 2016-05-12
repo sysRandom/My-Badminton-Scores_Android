@@ -45,18 +45,10 @@
         </activity>
         <activity
             android:name=".SelectPlayers"
-            android:label="@string/select_players_title"
-            android:parentActivityName=".NewMatch">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".NewMatch" />
+            android:label="@string/select_players_title">
         </activity>
         <activity android:name=".FriendsList"
-            android:label="@string/friends_list_title"
-            android:parentActivityName=".SelectPlayers">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".SelectPlayers" />
+            android:label="@string/friends_list_title">
         </activity>
     </application>
 
