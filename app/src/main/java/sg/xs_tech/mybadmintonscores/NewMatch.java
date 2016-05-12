@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -28,6 +27,9 @@ import java.util.Locale;
 
 public class NewMatch extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     static final int PICK_PLAYERS = 1;
+    static final String STORED = "sg.xs_tech.mybadmintonscores.newmatch";
+
+//    SharedPreferences sharedPreferences;
 
     private Button btnDatePicker;
     private Button btnSubmitMatch;
@@ -112,15 +114,65 @@ public class NewMatch extends AppCompatActivity implements DatePickerDialog.OnDa
         });
     }
 
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (resultCode == RESULT_OK) {
-//            if (requestCode == PICK_PLAYERS) {
-//                Log.i(this.toString(), "");
-//            }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == PICK_PLAYERS) {
+                Log.i(this.toString(), "");
+            }
+        }
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(this.toString(), "On Start");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(this.toString(), "On Resume");
+        // Place back the values from Shared Preferences
+//        if (sharedPreferences == null) {
+//            sharedPreferences = this.getSharedPreferences(STORED, this.MODE_PRIVATE);
 //        }
-//    }
+//        Log.i(this.toString(), "Loading stored preferences");
+//        mMatchType = sharedPreferences.getInt("MatchType", 0);
+//        mTeamScore = sharedPreferences.getInt("TeamScore", 0);
+//        mOpponentScore = sharedPreferences.getInt("OpponentScore", 0);
+//        btnDatePicker.setText(sharedPreferences.getString("MatchDate", "TODAY"));
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(this.toString(), "On Pause");
+        // Save the data into Shared Preferences
+//        if (sharedPreferences == null) {
+//            sharedPreferences = this.getSharedPreferences(STORED, this.MODE_PRIVATE);
+//        }
+//        SharedPreferences.Editor editor = sharedPreferences.edit();
+//        editor.putInt("MatchType", mMatchType);
+//        editor.putInt("TeamScore", mTeamScore);
+//        editor.putInt("OpponentScore", mOpponentScore);
+//        editor.putString("MatchDate", btnDatePicker.getText().toString());
+//        editor.apply();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(this.toString(), "On Stop");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(this.toString(), "On Destroy");
+    }
 
     public void showDatePickerDialog(View view) {
         DialogFragment dialogFragment = new DatePickerFragment();
@@ -141,18 +193,6 @@ public class NewMatch extends AppCompatActivity implements DatePickerDialog.OnDa
                 mMatchType = 0;
                 break;
         }
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        Log.i(this.toString(), "NewMatch save instance state");
-        super.onSaveInstanceState(outState, outPersistentState);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        Log.i(this.toString(), "NewMatch restore instance state");
-        super.onRestoreInstanceState(savedInstanceState);
     }
 
     @Override
