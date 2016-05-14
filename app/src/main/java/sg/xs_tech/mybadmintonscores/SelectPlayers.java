@@ -23,10 +23,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class SelectPlayers extends AppCompatActivity {
 
-    static final int PICK_PLAYER = 1;
+    static final int FB_TEAM_PLAYER1 = 1;
+    static final int FB_TEAM_PLAYER2 = 2;
+    static final int FB_OPPONENT_PLAYER1 = 3;
+    static final int FB_OPPONENT_PLAYER2 = 4;
 
     private Button mTeamPlayer1;
     private Button mTeamPlayer2;
@@ -55,11 +59,11 @@ public class SelectPlayers extends AppCompatActivity {
         LayoutInflater layoutInflater = LayoutInflater.from(this);
         final View player_name_dialog = layoutInflater.inflate(R.layout.player_name_dialog, null);
         final AlertDialog.Builder mPlayerName = new AlertDialog.Builder(this);
-        mPlayerName.setView(player_name_dialog);
         final EditText etName = (EditText) player_name_dialog.findViewById(R.id.player_name);
 
         Intent intent = getIntent();
         Integer mMatchType = intent.getIntExtra("match_type", 0);
+        mPlayerName.setView(player_name_dialog);
         mFriendsCount = intent.getIntExtra("friends_count", 0);
         Log.i(this.toString(), "Match Type: " + mMatchType);
 
@@ -77,8 +81,8 @@ public class SelectPlayers extends AppCompatActivity {
                 try {
                     etName.setText("");
                     if (mPlayerList.has("TeamPlayer1")) {
-                        if (!mPlayerList.getString("TeamPlayer1").isEmpty()) {
-                            etName.setText(String.format("%s", mPlayerList.getString("TeamPlayer1")));
+                        if (!mPlayerList.getJSONObject("TeamPlayer1").getString("name").isEmpty()) {
+                            etName.setText(String.format("%s", mPlayerList.getJSONObject("TeamPlayer1").getString("name")));
                         }
                     }
                     mPlayerName.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -88,8 +92,10 @@ public class SelectPlayers extends AppCompatActivity {
                                 if (mPlayerList.has("TeamPlayer1")) {
                                     if (etName.getText().length() > 0) {
                                         Log.i(this.toString(), "Team Player 1 name is " + etName.getText().toString());
-                                        if (!etName.getText().toString().equalsIgnoreCase(mPlayerList.getString("TeamPlayer1"))) {
-                                            mPlayerList.put("TeamPlayer1", etName.getText().toString());
+                                        if (!etName.getText().toString().equalsIgnoreCase(mPlayerList.getJSONObject("TeamPlayer1").getString("name"))) {
+                                            JSONObject details = new JSONObject();
+                                            details.put("name", etName.getText().toString());
+                                            mPlayerList.put("TeamPlayer1", details);
                                         }
                                         etName.setText("");
                                     } else {
@@ -99,7 +105,9 @@ public class SelectPlayers extends AppCompatActivity {
                                 } else {
                                     if (etName.getText().length() > 0) {
                                         Log.i(this.toString(), "Team Player 1 name is " + etName.getText().toString());
-                                        mPlayerList.put("TeamPlayer1", etName.getText().toString());
+                                        JSONObject details = new JSONObject();
+                                        details.put("name", etName.getText().toString());
+                                        mPlayerList.put("TeamPlayer1", details);
                                         etName.setText("");
                                     }
                                 }
@@ -126,7 +134,7 @@ public class SelectPlayers extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    getFacebookFriends();
+                    getFacebookFriends(FB_TEAM_PLAYER1);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -138,8 +146,8 @@ public class SelectPlayers extends AppCompatActivity {
                 try {
                     etName.setText("");
                     if (mPlayerList.has("OpponentPlayer1")) {
-                        if (!mPlayerList.getString("OpponentPlayer1").isEmpty()) {
-                            etName.setText(String.format("%s", mPlayerList.getString("OpponentPlayer1")));
+                        if (!mPlayerList.getJSONObject("OpponentPlayer1").getString("name").isEmpty()) {
+                            etName.setText(String.format("%s", mPlayerList.getJSONObject("OpponentPlayer1").getString("name")));
                         }
                     }
                     mPlayerName.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -149,20 +157,22 @@ public class SelectPlayers extends AppCompatActivity {
                                 if (mPlayerList.has("OpponentPlayer1")) {
                                     if (etName.getText().length() > 0) {
                                         Log.i(this.toString(), "Opponent Player 1 name is " + etName.getText().toString());
-                                        if (!etName.getText().toString().equalsIgnoreCase(mPlayerList.getString("OpponentPlayer1"))) {
-                                            mPlayerList.put("OpponentPlayer1", etName.getText().toString());
+                                        if (!etName.getText().toString().equalsIgnoreCase(mPlayerList.getJSONObject("OpponentPlayer1").getString("name"))) {
+                                            JSONObject details = new JSONObject();
+                                            details.put("name", etName.getText().toString());
+                                            mPlayerList.put("OpponentPlayer1", details);
                                         }
                                         etName.setText("");
-//                                            ((ViewGroup)player_name_dialog.getParent()).removeAllViews();
                                     } else {
                                         Log.i(this.toString(), "Opponent Player 1 has no name");
                                         mPlayerList.remove("OpponentPlayer1");
-//                                            ((ViewGroup)player_name_dialog.getParent()).removeAllViews();
                                     }
                                 } else {
                                     if (etName.getText().length() > 0) {
                                         Log.i(this.toString(), "Opponent Player 1 name is " + etName.getText().toString());
-                                        mPlayerList.put("OpponentPlayer1", etName.getText().toString());
+                                        JSONObject details = new JSONObject();
+                                        details.put("name", etName.getText().toString());
+                                        mPlayerList.put("OpponentPlayer1", details);
                                         etName.setText("");
                                     }
                                 }
@@ -346,7 +356,7 @@ public class SelectPlayers extends AppCompatActivity {
         }
     }
 
-    private void getFacebookFriends() {
+    private void getFacebookFriends(final int which) {
         new GraphRequest(
                 AccessToken.getCurrentAccessToken(), "/me/friends", null, HttpMethod.GET,
                 new GraphRequest.Callback() {
@@ -372,7 +382,7 @@ public class SelectPlayers extends AppCompatActivity {
                             }
                             Intent intent = new Intent(SelectPlayers.this, FriendsList.class);
                             intent.putExtra("fbFriends", mFriendsList);
-                            startActivityForResult(intent, PICK_PLAYER);
+                            startActivityForResult(intent, which);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -385,8 +395,17 @@ public class SelectPlayers extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            if (requestCode == PICK_PLAYER) {
-                Log.i(this.toString(), "");
+            Friend selected = data.getParcelableExtra("friend");
+            Log.i(this.toString(), String.format(Locale.getDefault(), "ID: %s, Name: %s", selected.getId(), selected.getFname()));
+            switch (requestCode) {
+                case FB_TEAM_PLAYER1:
+                    break;
+                case FB_TEAM_PLAYER2:
+                    break;
+                case FB_OPPONENT_PLAYER1:
+                    break;
+                case FB_OPPONENT_PLAYER2:
+                    break;
             }
         }
     }
