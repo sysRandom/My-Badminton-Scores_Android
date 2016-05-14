@@ -1,5 +1,6 @@
 package sg.xs_tech.mybadmintonscores;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
@@ -62,7 +64,7 @@ public class SelectPlayers extends AppCompatActivity {
         final EditText etName = (EditText) player_name_dialog.findViewById(R.id.player_name);
 
         Intent intent = getIntent();
-        Integer mMatchType = intent.getIntExtra("match_type", 0);
+        final Integer mMatchType = intent.getIntExtra("match_type", 0);
         mPlayerName.setView(player_name_dialog);
         mFriendsCount = intent.getIntExtra("friends_count", 0);
         Log.i(this.toString(), "Match Type: " + mMatchType);
@@ -198,11 +200,48 @@ public class SelectPlayers extends AppCompatActivity {
         mFbOpponentPlayer1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                try {
+                    getFacebookFriends(FB_OPPONENT_PLAYER1);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
         mSubmitPlayer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mMatchType == 0) {
+                    if (!mPlayerList.has("TeamPlayer1")) {
+                        Toast.makeText(getApplicationContext(), R.string.missing_team_player1, Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                    if (!mPlayerList.has("OpponentPlayer1")) {
+                        Toast.makeText(getApplicationContext(), R.string.missing_opponent_player1, Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                }
+                else {
+                    if (!mPlayerList.has("TeamPlayer1")) {
+                        Toast.makeText(getApplicationContext(), R.string.missing_team_player1, Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                    if (!mPlayerList.has("TeamPlayer2")) {
+                        Toast.makeText(getApplicationContext(), R.string.missing_team_player2, Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                    if (!mPlayerList.has("OpponentPlayer1")) {
+                        Toast.makeText(getApplicationContext(), R.string.missing_opponent_player1, Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                    if (!mPlayerList.has("OpponentPlayer2")) {
+                        Toast.makeText(getApplicationContext(), R.string.missing_opponent_player2, Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                }
+                Intent _return = new Intent();
+                _return.putExtra("Players", mPlayerList.toString());
+                setResult(Activity.RESULT_OK, _return);
+                finish();
             }
         });
 
@@ -271,6 +310,11 @@ public class SelectPlayers extends AppCompatActivity {
             mFbTeamPlayer2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    try {
+                        getFacebookFriends(FB_TEAM_PLAYER2);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             });
             mOpponentPlayer2.setOnClickListener(new View.OnClickListener() {
@@ -331,6 +375,11 @@ public class SelectPlayers extends AppCompatActivity {
             mFbOpponentPlayer2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    try {
+                        getFacebookFriends(FB_OPPONENT_PLAYER2);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             });
 
@@ -365,6 +414,7 @@ public class SelectPlayers extends AppCompatActivity {
     }
 
     private void getFacebookFriends(final int player) {
+        mFriendsList.clear();
         new GraphRequest(
                 AccessToken.getCurrentAccessToken(), "/me/friends", null, HttpMethod.GET,
                 new GraphRequest.Callback() {
@@ -386,6 +436,39 @@ public class SelectPlayers extends AppCompatActivity {
                                 if (friend.has("email") && !friend.getString("email").isEmpty()) {
                                     mFriend.setEmail(friend.getString("email"));
                                 }
+                                if (mPlayerList.has("TeamPlayer1") &&
+                                        player != FB_TEAM_PLAYER1 &&
+                                        mPlayerList.getJSONObject("TeamPlayer1").getString("id").equalsIgnoreCase(mFriend.getId())) {
+                                    Log.i(this.toString(), String.format(Locale.getDefault(), "Team Player 1: %s, ID: %s",
+                                            mPlayerList.getJSONObject("TeamPlayer1").getString("name"),
+                                            mPlayerList.getJSONObject("TeamPlayer1").getString("id")));
+                                    continue;
+                                }
+                                if (mPlayerList.has("TeamPlayer2") &&
+                                        player != FB_TEAM_PLAYER2 &&
+                                        mPlayerList.getJSONObject("TeamPlayer2").getString("id").equalsIgnoreCase(mFriend.getId())) {
+                                    Log.i(this.toString(), String.format(Locale.getDefault(), "Team Player 2: %s, ID: %s",
+                                            mPlayerList.getJSONObject("TeamPlayer2").getString("name"),
+                                            mPlayerList.getJSONObject("TeamPlayer2").getString("id")));
+                                    continue;
+                                }
+                                if (mPlayerList.has("OpponentPlayer1") &&
+                                        player != FB_OPPONENT_PLAYER1 &&
+                                        mPlayerList.getJSONObject("OpponentPlayer1").getString("id").equalsIgnoreCase(mFriend.getId())) {
+                                    Log.i(this.toString(), String.format(Locale.getDefault(), "Opponent Player 1: %s, ID: %s",
+                                            mPlayerList.getJSONObject("OpponentPlayer1").getString("name"),
+                                            mPlayerList.getJSONObject("OpponentPlayer1").getString("id")));
+                                    continue;
+                                }
+                                if (mPlayerList.has("OpponentPlayer2") &&
+                                        player != FB_OPPONENT_PLAYER2 &&
+                                        mPlayerList.getJSONObject("OpponentPlayer2").getString("id").equalsIgnoreCase(mFriend.getId())) {
+                                    Log.i(this.toString(), String.format(Locale.getDefault(), "Opponent Player 2: %s, ID: %s",
+                                            mPlayerList.getJSONObject("OpponentPlayer2").getString("name"),
+                                            mPlayerList.getJSONObject("OpponentPlayer2").getString("id")));
+                                    continue;
+                                }
+                                Log.i(this.toString(), "Adding friend: " + mFriend.getFname());
                                 mFriendsList.add(mFriend);
                             }
                             Intent intent = new Intent(SelectPlayers.this, FriendsList.class);
