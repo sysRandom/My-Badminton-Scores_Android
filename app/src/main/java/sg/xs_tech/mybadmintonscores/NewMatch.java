@@ -27,9 +27,6 @@ import java.util.Locale;
 
 public class NewMatch extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     static final int PICK_PLAYERS = 1;
-    static final String STORED = "sg.xs_tech.mybadmintonscores.newmatch";
-
-//    SharedPreferences sharedPreferences;
 
     private Button btnDatePicker;
     private Button btnSubmitMatch;
@@ -41,6 +38,8 @@ public class NewMatch extends AppCompatActivity implements DatePickerDialog.OnDa
     private Integer mMatchType = 0;
     private Integer mTeamScore = 0;
     private Integer mOpponentScore = 0;
+
+    private JSONObject mSelectedPlayers = new JSONObject();
 
     private final Calendar calendar = Calendar.getInstance();
 
@@ -80,9 +79,6 @@ public class NewMatch extends AppCompatActivity implements DatePickerDialog.OnDa
         btnSelectPlayers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(NewMatch.this, SelectPlayers.class);
-//                intent.putExtra("match_type", mMatchType);
-//                startActivity(intent);
                 new GraphRequest(
                         AccessToken.getCurrentAccessToken(), "/me/friends", null, HttpMethod.GET,
                         new GraphRequest.Callback() {
@@ -102,8 +98,8 @@ public class NewMatch extends AppCompatActivity implements DatePickerDialog.OnDa
                                     intent.putExtra("match_type", mMatchType);
                                     intent.putExtra("friends_count", mSummary.getInt("total_count"));
 //                                    intent.putExtra("friends", mFriends.toString());
-//                                    startActivityForResult(intent, PICK_PLAYERS);
-                                    startActivity(intent);
+                                    startActivityForResult(intent, PICK_PLAYERS);
+//                                    startActivity(intent);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -119,59 +115,13 @@ public class NewMatch extends AppCompatActivity implements DatePickerDialog.OnDa
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == PICK_PLAYERS) {
-                Log.i(this.toString(), "");
+                try {
+                    mSelectedPlayers = new JSONObject(data.getStringExtra("Players"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         }
-    }
-
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.d(this.toString(), "On Start");
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.d(this.toString(), "On Resume");
-        // Place back the values from Shared Preferences
-//        if (sharedPreferences == null) {
-//            sharedPreferences = this.getSharedPreferences(STORED, this.MODE_PRIVATE);
-//        }
-//        Log.i(this.toString(), "Loading stored preferences");
-//        mMatchType = sharedPreferences.getInt("MatchType", 0);
-//        mTeamScore = sharedPreferences.getInt("TeamScore", 0);
-//        mOpponentScore = sharedPreferences.getInt("OpponentScore", 0);
-//        btnDatePicker.setText(sharedPreferences.getString("MatchDate", "TODAY"));
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.d(this.toString(), "On Pause");
-        // Save the data into Shared Preferences
-//        if (sharedPreferences == null) {
-//            sharedPreferences = this.getSharedPreferences(STORED, this.MODE_PRIVATE);
-//        }
-//        SharedPreferences.Editor editor = sharedPreferences.edit();
-//        editor.putInt("MatchType", mMatchType);
-//        editor.putInt("TeamScore", mTeamScore);
-//        editor.putInt("OpponentScore", mOpponentScore);
-//        editor.putString("MatchDate", btnDatePicker.getText().toString());
-//        editor.apply();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.d(this.toString(), "On Stop");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.d(this.toString(), "On Destroy");
     }
 
     public void showDatePickerDialog(View view) {
@@ -198,6 +148,7 @@ public class NewMatch extends AppCompatActivity implements DatePickerDialog.OnDa
     @Override
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
 //        Button btnDate = (Button) view.findViewById(R.id.date_picker);
+        Log.i(this.toString(), "onDateSet: " + dayOfMonth + " " + monthOfYear + " " + year);
         btnDatePicker.setText(String.format(Locale.getDefault(),"%d-%d-%d", dayOfMonth, monthOfYear, year));
     }
 
@@ -209,6 +160,7 @@ public class NewMatch extends AppCompatActivity implements DatePickerDialog.OnDa
             int year = calendar.get(Calendar.YEAR);
             int month = calendar.get(Calendar.MONTH);
             int day = calendar.get(Calendar.DAY_OF_MONTH);
+            Log.i(this.toString(), "onCreateDialog: " + day + " " + month + " " + year);
             return new DatePickerDialog(getActivity(),(NewMatch)getActivity(),year,month,day);
         }
     }
