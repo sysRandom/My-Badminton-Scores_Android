@@ -219,8 +219,8 @@ public class SelectPlayers extends AppCompatActivity {
                     try {
                         etName.setText("");
                         if (mPlayerList.has("TeamPlayer2")) {
-                            if (!mPlayerList.getString("TeamPlayer2").isEmpty()) {
-                                etName.setText(String.format("%s", mPlayerList.getString("TeamPlayer2")));
+                            if (!mPlayerList.getJSONObject("TeamPlayer2").getString("name").isEmpty()) {
+                                etName.setText(String.format("%s", mPlayerList.getJSONObject("TeamPlayer2").getString("name")));
                             }
                         }
                         mPlayerName.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -230,8 +230,10 @@ public class SelectPlayers extends AppCompatActivity {
                                     if (mPlayerList.has("TeamPlayer2")) {
                                         if (etName.getText().length() > 0) {
                                             Log.i(this.toString(), "Team Player 2 name is " + etName.getText().toString());
-                                            if (!etName.getText().toString().equalsIgnoreCase(mPlayerList.getString("TeamPlayer2"))) {
-                                                mPlayerList.put("TeamPlayer2", etName.getText().toString());
+                                            if (!etName.getText().toString().equalsIgnoreCase(mPlayerList.getJSONObject("TeamPlayer2").getString("name"))) {
+                                                JSONObject details = new JSONObject();
+                                                details.put("name", etName.getText().toString());
+                                                mPlayerList.put("TeamPlayer2", details);
                                             }
                                             etName.setText("");
                                         } else {
@@ -241,7 +243,9 @@ public class SelectPlayers extends AppCompatActivity {
                                     } else {
                                         if (etName.getText().length() > 0) {
                                             Log.i(this.toString(), "Team Player 2 name is " + etName.getText().toString());
-                                            mPlayerList.put("TeamPlayer2", etName.getText().toString());
+                                            JSONObject details = new JSONObject();
+                                            details.put("name", etName.getText().toString());
+                                            mPlayerList.put("TeamPlayer2", details);
                                             etName.setText("");
                                         }
                                     }
@@ -275,8 +279,8 @@ public class SelectPlayers extends AppCompatActivity {
                     try {
                         etName.setText("");
                         if (mPlayerList.has("OpponentPlayer2")) {
-                            if (!mPlayerList.getString("OpponentPlayer2").isEmpty()) {
-                                etName.setText(String.format("%s", mPlayerList.getString("OpponentPlayer2")));
+                            if (!mPlayerList.getJSONObject("OpponentPlayer2").getString("name").isEmpty()) {
+                                etName.setText(String.format("%s", mPlayerList.getJSONObject("OpponentPlayer2").getString("name")));
                             }
                         }
                         mPlayerName.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -285,9 +289,11 @@ public class SelectPlayers extends AppCompatActivity {
                                 try {
                                     if (mPlayerList.has("OpponentPlayer2")) {
                                         if (etName.getText().length() > 0) {
-                                            Log.i(this.toString(), "(281) Opponent Player 2 name is " + etName.getText().toString());
-                                            if (!etName.getText().toString().equalsIgnoreCase(mPlayerList.getString("OpponentPlayer2"))) {
-                                                mPlayerList.put("OpponentPlayer2", etName.getText().toString());
+//                                            Log.i(this.toString(), "(281) Opponent Player 2 name is " + etName.getText().toString());
+                                            if (!etName.getText().toString().equalsIgnoreCase(mPlayerList.getJSONObject("OpponentPlayer2").getString("name"))) {
+                                                JSONObject details = new JSONObject();
+                                                details.put("name", etName.getText().toString());
+                                                mPlayerList.put("OpponentPlayer2", details);
                                             }
                                             etName.setText("");
                                         } else {
@@ -296,8 +302,10 @@ public class SelectPlayers extends AppCompatActivity {
                                         }
                                     } else {
                                         if (etName.getText().length() > 0) {
-                                            Log.i(this.toString(), "(293) Opponent Player 2 name is " + etName.getText().toString());
-                                            mPlayerList.put("OpponentPlayer2", etName.getText().toString());
+//                                            Log.i(this.toString(), "(293) Opponent Player 2 name is " + etName.getText().toString());
+                                            JSONObject details = new JSONObject();
+                                            details.put("name", etName.getText().toString());
+                                            mPlayerList.put("OpponentPlayer2", details);
                                             etName.setText("");
                                         }
                                     }
@@ -356,7 +364,7 @@ public class SelectPlayers extends AppCompatActivity {
         }
     }
 
-    private void getFacebookFriends(final int which) {
+    private void getFacebookFriends(final int player) {
         new GraphRequest(
                 AccessToken.getCurrentAccessToken(), "/me/friends", null, HttpMethod.GET,
                 new GraphRequest.Callback() {
@@ -382,7 +390,7 @@ public class SelectPlayers extends AppCompatActivity {
                             }
                             Intent intent = new Intent(SelectPlayers.this, FriendsList.class);
                             intent.putExtra("fbFriends", mFriendsList);
-                            startActivityForResult(intent, which);
+                            startActivityForResult(intent, player);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -395,17 +403,30 @@ public class SelectPlayers extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            Friend selected = data.getParcelableExtra("friend");
-            Log.i(this.toString(), String.format(Locale.getDefault(), "ID: %s, Name: %s", selected.getId(), selected.getFname()));
-            switch (requestCode) {
-                case FB_TEAM_PLAYER1:
-                    break;
-                case FB_TEAM_PLAYER2:
-                    break;
-                case FB_OPPONENT_PLAYER1:
-                    break;
-                case FB_OPPONENT_PLAYER2:
-                    break;
+            try {
+                Friend selected = data.getParcelableExtra("friend");
+                String the_player = "";
+                Log.i(this.toString(), String.format(Locale.getDefault(), "ID: %s, Name: %s", selected.getId(), selected.getFname()));
+                switch (requestCode) {
+                    case FB_TEAM_PLAYER1:
+                        the_player = "TeamPlayer1";
+                        break;
+                    case FB_TEAM_PLAYER2:
+                        the_player = "TeamPlayer2";
+                        break;
+                    case FB_OPPONENT_PLAYER1:
+                        the_player = "OpponentPlayer1";
+                        break;
+                    case FB_OPPONENT_PLAYER2:
+                        the_player = "OpponentPlayer2";
+                        break;
+                }
+                JSONObject myFriend = new JSONObject();
+                myFriend.put("id", selected.getId());
+                myFriend.put("name", selected.getFname());
+                mPlayerList.put(the_player, myFriend);
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
         }
     }
