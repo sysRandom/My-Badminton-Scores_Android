@@ -27,6 +27,10 @@
     <string name="select_players_player2">Player 2</string>
     <string name="select_fb_player2">FB Player 2</string>
     <string name="select_players_submit">Submit Players</string>
+    <string name="missing_team_player1">Please select Team Player 1</string>
+    <string name="missing_team_player2">Please select Team Player 2</string>
+    <string name="missing_opponent_player1">Please select Opponent Player 1</string>
+    <string name="missing_opponent_player2">Please select Opponent Player 2</string>
 
     <string name="player_name_prompt">Enter player name:</string>
     <string name="player_name_submit">Confirm player</string>
