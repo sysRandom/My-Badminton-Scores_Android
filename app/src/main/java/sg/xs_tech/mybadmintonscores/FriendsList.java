@@ -4,13 +4,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class FriendsList extends AppCompatActivity {
 
@@ -25,7 +23,7 @@ public class FriendsList extends AppCompatActivity {
         Intent intent = getIntent();
         ArrayList<Friend> friends = intent.getParcelableArrayListExtra("fbFriends");
 
-        FriendAdapter adapter = new FriendAdapter(this, friends);
+        final FriendAdapter adapter = new FriendAdapter(this, friends);
         mFriendList.setAdapter(adapter);
         mFriendList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
