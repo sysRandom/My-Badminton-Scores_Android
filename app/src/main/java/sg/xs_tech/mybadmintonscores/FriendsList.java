@@ -1,5 +1,6 @@
 package sg.xs_tech.mybadmintonscores;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -30,7 +31,10 @@ public class FriendsList extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Friend selected = (Friend) parent.getItemAtPosition(position);
-                Log.i(this.toString(), String.format(Locale.getDefault(), "ID: %s, Name: %s", selected.getId(), selected.getFname()));
+                Intent _result = new Intent();
+                _result.putExtra("friend", selected);
+                setResult(Activity.RESULT_OK, _result);
+                finish();
             }
         });
     }
