@@ -13,6 +13,7 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
@@ -37,12 +38,14 @@ public class Login extends AppCompatActivity {
         networkInfo = connectivityManager.getActiveNetworkInfo();
 
         FacebookSdk.sdkInitialize(getApplicationContext());
+        final AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
         loginButton = (LoginButton) findViewById(R.id.fb_login);
 
         accessToken = AccessToken.getCurrentAccessToken();
         if (accessToken != null) {
             Log.i(this.toString(), "Already has token: " + accessToken.getToken());
+            appEventsLogger.logEvent("FACEBOOK_ALREADY_LOGGED_IN");
             this.finish();
         }
         else {
@@ -51,17 +54,20 @@ public class Login extends AppCompatActivity {
                 @Override
                 public void onSuccess(LoginResult loginResult) {
                     Log.i(this.toString(), "Facebook login successful!");
+                    appEventsLogger.logEvent("FACEBOOK_LOGIN_SUCCESS");
                     finish();
                 }
 
                 @Override
                 public void onCancel() {
                     Log.i(this.toString(), "Facebook login cancelled!");
+                    appEventsLogger.logEvent("FACEBOOK_LOGIN_CANCELLED");
                 }
 
                 @Override
                 public void onError(FacebookException error) {
                     Log.e(this.toString(), "Facebook login error: " + error.toString());
+                    appEventsLogger.logEvent("FACEBOOK_LOGIN_ERROR");
                 }
             });
         }
@@ -71,9 +77,5 @@ public class Login extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
-    }
-
-    private void finishLogin() {
-        this.finish();
     }
 }
