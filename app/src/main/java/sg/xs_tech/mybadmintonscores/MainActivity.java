@@ -9,14 +9,12 @@ import android.widget.Button;
 
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
-import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
 import com.facebook.Profile;
 import com.facebook.ProfileTracker;
 import com.facebook.appevents.AppEventsLogger;
 
 public class MainActivity extends AppCompatActivity {
-    private CallbackManager callbackManager;
     private AccessTokenTracker accessTokenTracker;
     private ProfileTracker profileTracker;
     private AccessToken accessToken;
@@ -29,6 +27,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(getApplication());
+        final AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(getApplicationContext());
+
         btnAddMatch = (Button) findViewById(R.id.add_match);
         btnListMatch = (Button) findViewById(R.id.view_match_history);
         btnAddMatch.setOnClickListener(new View.OnClickListener() {
@@ -36,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.i(this.toString(), "Adding new match");
                 Intent intent = new Intent(MainActivity.this, NewMatch.class);
+                appEventsLogger.logEvent("START_NEW_MATCH");
                 startActivity(intent);
             }
         });
@@ -46,8 +49,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        FacebookSdk.sdkInitialize(getApplicationContext());
-        callbackManager = CallbackManager.Factory.create();
         profileTracker = new ProfileTracker() {
             @Override
             protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
@@ -70,19 +71,11 @@ public class MainActivity extends AppCompatActivity {
         if (accessToken != null) {
             Log.i(this.toString(), "Access token: " + accessToken.getToken());
             mShowHideButtons(View.VISIBLE);
-//            GraphRequestAsyncTask graphRequestAsyncTask = new GraphRequest(
-//                    AccessToken.getCurrentAccessToken(), "/me/friends", null, HttpMethod.GET,
-//                    new GraphRequest.Callback() {
-//                        @Override
-//                        public void onCompleted(GraphResponse response) {
-//                            Log.i(this.toString(), "Friends List Result: " + response.toString());
-//                        }
-//                    }
-//            ).executeAsync();
         }
         else {
             Log.i(this.toString(), "There is no access token");
             Intent intent = new Intent(MainActivity.this, Login.class);
+            appEventsLogger.logEvent("START_LOGIN_PAGE");
             startActivity(intent);
         }
     }
@@ -107,17 +100,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        Log.i(this.toString(), "Paused!");
-        AppEventsLogger.deactivateApp(this);
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
         Log.i(this.toString(), "Resumed!");
-        AppEventsLogger.activateApp(this);
         if (accessToken != null) {
             mShowHideButtons(View.VISIBLE);
         }
