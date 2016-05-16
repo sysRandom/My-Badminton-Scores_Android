@@ -7,16 +7,23 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.FacebookSdk;
 import com.facebook.Profile;
-import com.facebook.ProfileTracker;
 import com.facebook.appevents.AppEventsLogger;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
     private AccessTokenTracker accessTokenTracker;
-    private ProfileTracker profileTracker;
+//    private ProfileTracker profileTracker;
     private AccessToken accessToken;
 
     private Button btnAddMatch;
@@ -30,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(getApplication());
         final AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(getApplicationContext());
+        final Profile profile = Profile.getCurrentProfile();
 
         btnAddMatch = (Button) findViewById(R.id.add_match);
         btnListMatch = (Button) findViewById(R.id.view_match_history);
@@ -49,28 +57,102 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        profileTracker = new ProfileTracker() {
-            @Override
-            protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
-                if (currentProfile != null) {
-                    Log.i(this.toString(), "Current profile ID: " + currentProfile.getId());
-                }
-            }
-        };
-        profileTracker.startTracking();
+//        profileTracker = new ProfileTracker() {
+//            @Override
+//            protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
+//                if (currentProfile != null) {
+//                    Log.i(this.toString(), "Current profile ID: " + currentProfile.getId());
+//                }
+//            }
+//        };
+//        profileTracker.startTracking();
+        final JSONObject queryData = new JSONObject();
+//        final JSONObject[] queryResult = {new JSONObject()};
         accessTokenTracker = new AccessTokenTracker() {
             @Override
             protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
                 if (currentAccessToken != null) {
-                    Log.i(this.toString(), "New access token: " + currentAccessToken.getToken());
-                    mShowHideButtons(View.VISIBLE);
+                    try {
+                        Log.i(this.toString(), "New access token: " + currentAccessToken.getToken());
+                        mShowHideButtons(View.VISIBLE);
+                        queryData.put("fb_id", currentAccessToken.getUserId());
+                        queryData.put("fb_ct", currentAccessToken.getToken());
+                        if (profile != null) {
+                            queryData.put("fb_name", profile.getName());
+                            queryData.put("fb_fname", profile.getFirstName());
+                            queryData.put("fb_mname", profile.getMiddleName());
+                            queryData.put("fb_lname", profile.getLastName());
+                            queryData.put("fb_uri", profile.getLinkUri());
+                        }
+//                        JSONObject queryResult = new QueryAPITask().execute(
+//                                getString(R.string.member_login_api_url),
+//                                "POST", queryData
+//                        ).get();
+                        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                                Request.Method.POST,
+                                getResources().getString(R.string.member_login_api_url),
+                                queryData, new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                Log.i(this.toString(), "Login Response: " + response.toString());
+                            }
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                error.printStackTrace();
+                            }
+                        });
+                        Volley.newRequestQueue(getApplicationContext()).add(jsonObjectRequest);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         };
         accessToken = AccessToken.getCurrentAccessToken();
         if (accessToken != null) {
-            Log.i(this.toString(), "Access token: " + accessToken.getToken());
-            mShowHideButtons(View.VISIBLE);
+            try {
+                Log.i(this.toString(), "Access token: " + accessToken.getToken());
+                mShowHideButtons(View.VISIBLE);
+                queryData.put("fb_id", accessToken.getUserId());
+                queryData.put("fb_ct", accessToken.getToken());
+                if (profile != null) {
+                    queryData.put("fb_name", profile.getName());
+                    queryData.put("fb_fname", profile.getFirstName());
+                    queryData.put("fb_mname", profile.getMiddleName());
+                    queryData.put("fb_lname", profile.getLastName());
+                    queryData.put("fb_uri", profile.getLinkUri());
+                }
+//                JSONObject queryResult = new QueryAPITask().execute(
+//                        getString(R.string.member_login_api_url),
+//                        "POST",
+//                        queryData
+//                ).get();
+//                Log.i(this.toString(), "Query Result: " + queryResult.toString());
+//                if (queryResult.getInt("status") == 1) {
+//                    Log.i(this.toString(), "Error message: " + queryResult.getString("message"));
+//                }
+                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                        Request.Method.POST,
+                        getResources().getString(R.string.member_login_api_url),
+                        queryData, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.i(this.toString(), "Login Response: " + response.toString());
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        if (error.networkResponse != null && error.networkResponse.data != null) {
+                            VolleyError volleyError = new VolleyError(new String(error.networkResponse.data));
+                            Log.i(this.toString(), "Response error message: " + volleyError.getMessage());
+                        }
+                    }
+                });
+                Volley.newRequestQueue(getApplicationContext()).add(jsonObjectRequest);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
         else {
             Log.i(this.toString(), "There is no access token");
@@ -113,6 +195,6 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         Log.i(this.toString(), "Destroyed!");
         accessTokenTracker.stopTracking();
-        profileTracker.stopTracking();
+//        profileTracker.stopTracking();
     }
 }
