@@ -75,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         Log.i(this.toString(), "New access token: " + currentAccessToken.getToken());
                         mShowHideButtons(View.VISIBLE);
+                        queryData.put("fb_app_id", getResources().getString(R.string.facebook_app_id));
                         queryData.put("fb_id", currentAccessToken.getUserId());
                         queryData.put("fb_ct", currentAccessToken.getToken());
                         if (profile != null) {
@@ -99,7 +100,10 @@ public class MainActivity extends AppCompatActivity {
                         }, new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
-                                error.printStackTrace();
+                                if (error.networkResponse != null && error.networkResponse.data != null) {
+                                    VolleyError volleyError = new VolleyError(new String(error.networkResponse.data));
+                                    Log.i(this.toString(), "Response error message: " + volleyError.getMessage());
+                                }
                             }
                         });
                         Volley.newRequestQueue(getApplicationContext()).add(jsonObjectRequest);
@@ -114,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 Log.i(this.toString(), "Access token: " + accessToken.getToken());
                 mShowHideButtons(View.VISIBLE);
+                queryData.put("fb_app_id", getResources().getString(R.string.facebook_app_id));
                 queryData.put("fb_id", accessToken.getUserId());
                 queryData.put("fb_ct", accessToken.getToken());
                 if (profile != null) {
