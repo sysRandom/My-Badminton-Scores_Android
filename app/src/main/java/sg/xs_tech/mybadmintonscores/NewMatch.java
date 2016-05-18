@@ -54,6 +54,9 @@ public class NewMatch extends AppCompatActivity implements DatePickerDialog.OnDa
         etTeamScore = (EditText) findViewById(R.id.team_score);
         etOpponentScore = (EditText) findViewById(R.id.opponent_score);
 
+        final AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        final JSONObject queryData = new JSONObject();
+
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
@@ -62,18 +65,63 @@ public class NewMatch extends AppCompatActivity implements DatePickerDialog.OnDa
         btnSubmitMatch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mTeamScore = 0;
-                mOpponentScore = 0;
-                if (etTeamScore.getText().toString().trim().length() > 0) {
-                    mTeamScore = Integer.parseInt(etTeamScore.getText().toString());
+                try {
+                    mTeamScore = 0;
+                    mOpponentScore = 0;
+                    if (etTeamScore.getText().toString().trim().length() > 0) {
+                        mTeamScore = Integer.parseInt(etTeamScore.getText().toString());
+                    }
+                    if (etOpponentScore.getText().toString().trim().length() > 0) {
+                        mOpponentScore = Integer.parseInt(etOpponentScore.getText().toString());
+                    }
+                    // TODO: 18/5/16 Remove debug log
+                    Log.i(this.toString(), String.format(
+                            "Match date: %s, Match type: %d, Team score: %d, Opponent score: %d, Players: %s",
+                            btnDatePicker.getText(), mMatchType, mTeamScore, mOpponentScore, mSelectedPlayers.toString()
+                    ));
+                    queryData.put("fb_app_id", getResources().getString(R.string.facebook_app_id));
+                    queryData.put("fb_id", accessToken.getUserId());
+                    queryData.put("token", accessToken.getToken());
+                    queryData.put("game_type", mMatchType);
+                    queryData.put("team_score", mTeamScore);
+                    queryData.put("opponent_score", mOpponentScore);
+                    if (mSelectedPlayers.has("TeamPlayer1")) {
+                        if (mSelectedPlayers.getJSONObject("TeamPlayer1").has("id")) {
+                            queryData.put("team_player1", mSelectedPlayers.getJSONObject("TeamPlayer1").getString("id"));
+                        }
+                        else {
+                            queryData.put("team_player1", mSelectedPlayers.getJSONObject("TeamPlayer1").getString("name"));
+                        }
+                    }
+                    if (mSelectedPlayers.has("TeamPlayer2")) {
+                        if (mSelectedPlayers.getJSONObject("TeamPlayer2").has("id")) {
+                            queryData.put("team_player2", mSelectedPlayers.getJSONObject("TeamPlayer2").getString("id"));
+                        }
+                        else {
+                            queryData.put("team_player2", mSelectedPlayers.getJSONObject("TeamPlayer2").getString("name"));
+                        }
+                    }
+                    if (mSelectedPlayers.has("OpponentPlayer1")) {
+                        if (mSelectedPlayers.getJSONObject("OpponentPlayer1").has("id")) {
+                            queryData.put("opponent_player1", mSelectedPlayers.getJSONObject("OpponentPlayer1").getString("id"));
+                        }
+                        else {
+                            queryData.put("opponent_player1", mSelectedPlayers.getJSONObject("OpponentPlayer1").getString("name"));
+                        }
+                    }
+                    if (mSelectedPlayers.has("OpponentPlayer2")) {
+                        if (mSelectedPlayers.getJSONObject("OpponentPlayer2").has("id")) {
+                            queryData.put("opponent_player2", mSelectedPlayers.getJSONObject("OpponentPlayer2").getString("id"));
+                        }
+                        else {
+                            queryData.put("opponent_player2", mSelectedPlayers.getJSONObject("OpponentPlayer2").getString("name"));
+                        }
+                    }
+                    Log.i(this.toString(), "Query string: " + queryData.toString());
+                    // TODO: 18/5/16 Submit to Badminton API
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-                if (etOpponentScore.getText().toString().trim().length() > 0) {
-                    mOpponentScore = Integer.parseInt(etOpponentScore.getText().toString());
-                }
-                Log.i(this.toString(), String.format(
-                        "Match date: %s, Match type: %d, Team score: %d, Opponent score: %d",
-                        btnDatePicker.getText(), mMatchType, mTeamScore, mOpponentScore
-                ));
             }
         });
         btnSelectPlayers.setOnClickListener(new View.OnClickListener() {
