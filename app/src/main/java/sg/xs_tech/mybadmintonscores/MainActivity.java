@@ -23,7 +23,6 @@ import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
     private AccessTokenTracker accessTokenTracker;
-//    private ProfileTracker profileTracker;
     private AccessToken accessToken;
 
     private Button btnAddMatch;
@@ -38,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         AppEventsLogger.activateApp(getApplication());
         final AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(getApplicationContext());
         final Profile profile = Profile.getCurrentProfile();
+        final JSONObject queryData = new JSONObject();
 
         btnAddMatch = (Button) findViewById(R.id.add_match);
         btnListMatch = (Button) findViewById(R.id.view_match_history);
@@ -57,17 +57,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-//        profileTracker = new ProfileTracker() {
-//            @Override
-//            protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
-//                if (currentProfile != null) {
-//                    Log.i(this.toString(), "Current profile ID: " + currentProfile.getId());
-//                }
-//            }
-//        };
-//        profileTracker.startTracking();
-        final JSONObject queryData = new JSONObject();
-//        final JSONObject[] queryResult = {new JSONObject()};
         accessTokenTracker = new AccessTokenTracker() {
             @Override
             protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
@@ -85,10 +74,6 @@ public class MainActivity extends AppCompatActivity {
                             queryData.put("fb_lname", profile.getLastName());
                             queryData.put("fb_uri", profile.getLinkUri());
                         }
-//                        JSONObject queryResult = new QueryAPITask().execute(
-//                                getString(R.string.member_login_api_url),
-//                                "POST", queryData
-//                        ).get();
                         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                                 Request.Method.POST,
                                 getResources().getString(R.string.member_login_api_url),
@@ -128,15 +113,6 @@ public class MainActivity extends AppCompatActivity {
                     queryData.put("fb_lname", profile.getLastName());
                     queryData.put("fb_uri", profile.getLinkUri());
                 }
-//                JSONObject queryResult = new QueryAPITask().execute(
-//                        getString(R.string.member_login_api_url),
-//                        "POST",
-//                        queryData
-//                ).get();
-//                Log.i(this.toString(), "Query Result: " + queryResult.toString());
-//                if (queryResult.getInt("status") == 1) {
-//                    Log.i(this.toString(), "Error message: " + queryResult.getString("message"));
-//                }
                 JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                         Request.Method.POST,
                         getResources().getString(R.string.member_login_api_url),
@@ -200,6 +176,5 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         Log.i(this.toString(), "Destroyed!");
         accessTokenTracker.stopTracking();
-//        profileTracker.stopTracking();
     }
 }
