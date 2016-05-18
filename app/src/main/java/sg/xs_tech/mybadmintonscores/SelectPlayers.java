@@ -19,6 +19,7 @@ import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
+import com.facebook.Profile;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -415,6 +416,7 @@ public class SelectPlayers extends AppCompatActivity {
 
     private void getFacebookFriends(final int player) {
         mFriendsList.clear();
+        final Profile profile = Profile.getCurrentProfile();
         new GraphRequest(
                 AccessToken.getCurrentAccessToken(), "/me/friends", null, HttpMethod.GET,
                 new GraphRequest.Callback() {
@@ -430,7 +432,20 @@ public class SelectPlayers extends AppCompatActivity {
                                     "Avail friends: %d, total friends: %d",
                                     mFriends.length(), mSummary.getInt("total_count")
                             ));
+
+                            /**
+                             * This loop checks for ID or Names previously selected does not gets
+                             * added in again.
+                             */
+
+                            // Adds user into 1st on the list
+                            // TODO: 18/5/16 Add checks to ensure user is added ONLY ONCE
+                            Log.i(this.toString(), "Adding myself to list");
+                            final Friend me = new Friend(profile.getId(), profile.getName());
+                            mFriendsList.add(me);
+
                             for (int i = 0; i < mFriends.length(); ++i) {
+
                                 JSONObject friend = mFriends.getJSONObject(i);
                                 final Friend mFriend = new Friend(friend.getString("id"), friend.getString("name"));
                                 if (friend.has("email") && !friend.getString("email").isEmpty()) {
@@ -471,6 +486,7 @@ public class SelectPlayers extends AppCompatActivity {
                                 Log.i(this.toString(), "Adding friend: " + mFriend.getFname());
                                 mFriendsList.add(mFriend);
                             }
+                            Log.i(this.toString(), "getFacebookFriends List: " + mFriendsList.toString());
                             Intent intent = new Intent(SelectPlayers.this, FriendsList.class);
                             intent.putExtra("fbFriends", mFriendsList);
                             startActivityForResult(intent, player);
