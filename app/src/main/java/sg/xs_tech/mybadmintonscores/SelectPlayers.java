@@ -439,10 +439,32 @@ public class SelectPlayers extends AppCompatActivity {
                              */
 
                             // Adds user into 1st on the list
-                            // TODO: 18/5/16 Add checks to ensure user is added ONLY ONCE
                             Log.i(this.toString(), "Adding myself to list");
-                            final Friend me = new Friend(profile.getId(), profile.getName());
-                            mFriendsList.add(me);
+                            Boolean has_me = false;
+                            if (mPlayerList.has("TeamPlayer1") &&
+                                    player != FB_TEAM_PLAYER1 &&
+                                    mPlayerList.getJSONObject("TeamPlayer1").getString("id").equalsIgnoreCase(profile.getId())) {
+                                has_me = true;
+                            }
+                            if (mPlayerList.has("TeamPlayer2") &&
+                                    player != FB_TEAM_PLAYER2 &&
+                                    mPlayerList.getJSONObject("TeamPlayer2").getString("id").equalsIgnoreCase(profile.getId())) {
+                                has_me = true;
+                            }
+                            if (mPlayerList.has("OpponentPlayer1") &&
+                                    player != FB_OPPONENT_PLAYER1 &&
+                                    mPlayerList.getJSONObject("OpponentPlayer1").getString("id").equalsIgnoreCase(profile.getId())) {
+                                has_me = true;
+                            }
+                            if (mPlayerList.has("OpponentPlayer2") &&
+                                    player != FB_OPPONENT_PLAYER2 &&
+                                    mPlayerList.getJSONObject("OpponentPlayer2").getString("id").equalsIgnoreCase(profile.getId())) {
+                                has_me = true;
+                            }
+                            if (!has_me) {
+                                final Friend me = new Friend(profile.getId(), profile.getName());
+                                mFriendsList.add(me);
+                            }
 
                             for (int i = 0; i < mFriends.length(); ++i) {
 
@@ -451,6 +473,7 @@ public class SelectPlayers extends AppCompatActivity {
                                 if (friend.has("email") && !friend.getString("email").isEmpty()) {
                                     mFriend.setEmail(friend.getString("email"));
                                 }
+                                // Ensure that current friend isn't already inside mPlayerList
                                 if (mPlayerList.has("TeamPlayer1") &&
                                         player != FB_TEAM_PLAYER1 &&
                                         mPlayerList.getJSONObject("TeamPlayer1").getString("id").equalsIgnoreCase(mFriend.getId())) {
