@@ -6,6 +6,7 @@
     <string name="facebook_app_id">467811920086939</string>
     <string name="member_login_api_url">https://devel.xs-tech.sg/api/public/member/login</string>
     <string name="member_update_api_url">https://devel.xs-tech.sg/api/public/member/update</string>
+    <string name="post_match_api_url">https://devel.xs-tech.sg/api/public/badminton/match</string>
 
     <string name="add_match_button">New Match</string>
     <string name="add_match_title">New Match</string>
