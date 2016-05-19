@@ -13,6 +13,11 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
@@ -74,11 +79,6 @@ public class NewMatch extends AppCompatActivity implements DatePickerDialog.OnDa
                     if (etOpponentScore.getText().toString().trim().length() > 0) {
                         mOpponentScore = Integer.parseInt(etOpponentScore.getText().toString());
                     }
-                    // TODO: 18/5/16 Remove debug log
-                    Log.i(this.toString(), String.format(
-                            "Match date: %s, Match type: %d, Team score: %d, Opponent score: %d, Players: %s",
-                            btnDatePicker.getText(), mMatchType, mTeamScore, mOpponentScore, mSelectedPlayers.toString()
-                    ));
                     queryData.put("fb_app_id", getResources().getString(R.string.facebook_app_id));
                     queryData.put("fb_id", accessToken.getUserId());
                     queryData.put("token", accessToken.getToken());
@@ -118,7 +118,24 @@ public class NewMatch extends AppCompatActivity implements DatePickerDialog.OnDa
                         }
                     }
                     Log.i(this.toString(), "Query string: " + queryData.toString());
-                    // TODO: 18/5/16 Submit to Badminton API
+                    JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                            Request.Method.POST,
+                            getResources().getString(R.string.post_match_api_url),
+                            queryData, new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Log.i(this.toString(), "Post Match Response: " + response.toString());
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            if (error.networkResponse != null && error.networkResponse.data != null) {
+                                VolleyError volleyError = new VolleyError(new String(error.networkResponse.data));
+                                Log.i(this.toString(), "Response error message: " + volleyError.getMessage());
+                            }
+                        }
+                    });
+                    Volley.newRequestQueue(getApplicationContext()).add(jsonObjectRequest);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
