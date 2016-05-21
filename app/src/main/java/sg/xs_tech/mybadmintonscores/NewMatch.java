@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -125,6 +126,8 @@ public class NewMatch extends AppCompatActivity implements DatePickerDialog.OnDa
                         @Override
                         public void onResponse(JSONObject response) {
                             Log.i(this.toString(), "Post Match Response: " + response.toString());
+                            Toast.makeText(NewMatch.this, getResources().getString(R.string.add_match_submit_successful), Toast.LENGTH_SHORT).show();
+                            finish();
                         }
                     }, new Response.ErrorListener() {
                         @Override
