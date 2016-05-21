@@ -19,6 +19,7 @@
     <string name="add_match_score_opponent">Opponent Score:</string>
     <string name="add_match_select_players">Select Players</string>
     <string name="add_match_submit_match">Submit Match</string>
+    <string name="add_match_submit_successful">Match submitted successfully</string>
 
     <string name="select_players_title">Choose players</string>
     <string name="select_players_team">Player Team</string>
