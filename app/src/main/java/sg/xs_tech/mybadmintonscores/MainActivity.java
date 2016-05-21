@@ -15,7 +15,6 @@ import com.android.volley.toolbox.Volley;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.FacebookSdk;
-import com.facebook.Profile;
 import com.facebook.appevents.AppEventsLogger;
 
 import org.json.JSONException;
@@ -36,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(getApplication());
         final AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(getApplicationContext());
-        final Profile profile = Profile.getCurrentProfile();
+//        final Profile profile = Profile.getCurrentProfile();
         final JSONObject queryData = new JSONObject();
 
         btnAddMatch = (Button) findViewById(R.id.add_match);
@@ -67,13 +66,13 @@ public class MainActivity extends AppCompatActivity {
                         queryData.put("fb_app_id", getResources().getString(R.string.facebook_app_id));
                         queryData.put("fb_id", currentAccessToken.getUserId());
                         queryData.put("fb_ct", currentAccessToken.getToken());
-                        if (profile != null) {
-                            queryData.put("fb_name", profile.getName());
-                            queryData.put("fb_fname", profile.getFirstName());
-                            queryData.put("fb_mname", profile.getMiddleName());
-                            queryData.put("fb_lname", profile.getLastName());
-                            queryData.put("fb_uri", profile.getLinkUri());
-                        }
+//                        if (profile != null) {
+//                            queryData.put("fb_name", profile.getName());
+//                            queryData.put("fb_fname", profile.getFirstName());
+//                            queryData.put("fb_mname", profile.getMiddleName());
+//                            queryData.put("fb_lname", profile.getLastName());
+//                            queryData.put("fb_uri", profile.getLinkUri());
+//                        }
                         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                                 Request.Method.POST,
                                 getResources().getString(R.string.member_login_api_url),
@@ -106,13 +105,13 @@ public class MainActivity extends AppCompatActivity {
                 queryData.put("fb_app_id", getResources().getString(R.string.facebook_app_id));
                 queryData.put("fb_id", accessToken.getUserId());
                 queryData.put("fb_ct", accessToken.getToken());
-                if (profile != null) {
-                    queryData.put("fb_name", profile.getName());
-                    queryData.put("fb_fname", profile.getFirstName());
-                    queryData.put("fb_mname", profile.getMiddleName());
-                    queryData.put("fb_lname", profile.getLastName());
-                    queryData.put("fb_uri", profile.getLinkUri());
-                }
+//                if (profile != null) {
+//                    queryData.put("fb_name", profile.getName());
+//                    queryData.put("fb_fname", profile.getFirstName());
+//                    queryData.put("fb_mname", profile.getMiddleName());
+//                    queryData.put("fb_lname", profile.getLastName());
+//                    queryData.put("fb_uri", profile.getLinkUri());
+//                }
                 JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                         Request.Method.POST,
                         getResources().getString(R.string.member_login_api_url),
