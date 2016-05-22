@@ -30,7 +30,6 @@ public class Login extends AppCompatActivity {
     private NetworkInfo networkInfo;
 
     private CallbackManager callbackManager;
-//    private AccessToken accessToken;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +41,6 @@ public class Login extends AppCompatActivity {
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         final AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(getApplicationContext());
-//        final Profile profile = Profile.getCurrentProfile();
         final JSONObject queryData = new JSONObject();
         final LoginButton loginButton = (LoginButton) findViewById(R.id.fb_login);
 
