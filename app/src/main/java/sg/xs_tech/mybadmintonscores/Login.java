@@ -8,11 +8,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -22,7 +17,6 @@ import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Login extends AppCompatActivity {
@@ -48,34 +42,9 @@ public class Login extends AppCompatActivity {
 
         final AccessToken accessToken = AccessToken.getCurrentAccessToken();
         if (accessToken != null) {
-            try {
-                Log.i(this.toString(), "Already has token: " + accessToken.getToken());
-                appEventsLogger.logEvent("FACEBOOK_ALREADY_LOGGED_IN");
-                queryData.put("fb_app_id", getResources().getString(R.string.facebook_app_id));
-                queryData.put("fb_id", accessToken.getUserId());
-                queryData.put("fb_ct", accessToken.getToken());
-                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                        Request.Method.POST,
-                        getResources().getString(R.string.member_login_api_url),
-                        queryData, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.i(this.toString(), "Login Response: " + response.toString());
-                        finish();
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        if (error.networkResponse != null && error.networkResponse.data != null) {
-                            VolleyError volleyError = new VolleyError(new String(error.networkResponse.data));
-                            Log.i(this.toString(), "Response error message: " + volleyError.getMessage());
-                        }
-                    }
-                });
-                Volley.newRequestQueue(getApplicationContext()).add(jsonObjectRequest);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            Log.i(this.toString(), "Already has token: " + accessToken.getToken());
+            appEventsLogger.logEvent("FACEBOOK_ALREADY_LOGGED_IN");
+            finish();
         }
         else {
             loginButton.setReadPermissions("user_friends");
