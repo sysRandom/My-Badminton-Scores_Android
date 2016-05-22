@@ -443,22 +443,26 @@ public class SelectPlayers extends AppCompatActivity {
                             Boolean has_me = false;
                             if (mPlayerList.has("TeamPlayer1") &&
                                     player != FB_TEAM_PLAYER1 &&
-                                    mPlayerList.getJSONObject("TeamPlayer1").getString("id").equalsIgnoreCase(profile.getId())) {
+                                    (mPlayerList.getJSONObject("TeamPlayer1").has("id") &&
+                                            mPlayerList.getJSONObject("TeamPlayer1").getString("id").equalsIgnoreCase(profile.getId()))) {
                                 has_me = true;
                             }
                             if (mPlayerList.has("TeamPlayer2") &&
                                     player != FB_TEAM_PLAYER2 &&
-                                    mPlayerList.getJSONObject("TeamPlayer2").getString("id").equalsIgnoreCase(profile.getId())) {
+                                    (mPlayerList.getJSONObject("TeamPlayer2").has("id") &&
+                                            mPlayerList.getJSONObject("TeamPlayer2").getString("id").equalsIgnoreCase(profile.getId()))) {
                                 has_me = true;
                             }
                             if (mPlayerList.has("OpponentPlayer1") &&
                                     player != FB_OPPONENT_PLAYER1 &&
-                                    mPlayerList.getJSONObject("OpponentPlayer1").getString("id").equalsIgnoreCase(profile.getId())) {
+                                    (mPlayerList.getJSONObject("OpponentPlayer1").has("id") &&
+                                            mPlayerList.getJSONObject("OpponentPlayer1").getString("id").equalsIgnoreCase(profile.getId()))) {
                                 has_me = true;
                             }
                             if (mPlayerList.has("OpponentPlayer2") &&
                                     player != FB_OPPONENT_PLAYER2 &&
-                                    mPlayerList.getJSONObject("OpponentPlayer2").getString("id").equalsIgnoreCase(profile.getId())) {
+                                    (mPlayerList.getJSONObject("OpponentPlayer2").has("id") &&
+                                            mPlayerList.getJSONObject("OpponentPlayer2").getString("id").equalsIgnoreCase(profile.getId()))) {
                                 has_me = true;
                             }
                             if (!has_me) {
@@ -476,7 +480,8 @@ public class SelectPlayers extends AppCompatActivity {
                                 // Ensure that current friend isn't already inside mPlayerList
                                 if (mPlayerList.has("TeamPlayer1") &&
                                         player != FB_TEAM_PLAYER1 &&
-                                        mPlayerList.getJSONObject("TeamPlayer1").getString("id").equalsIgnoreCase(mFriend.getId())) {
+                                        (mPlayerList.getJSONObject("TeamPlayer1").has("id") &&
+                                                mPlayerList.getJSONObject("TeamPlayer1").getString("id").equalsIgnoreCase(mFriend.getId()))) {
                                     Log.i(this.toString(), String.format(Locale.getDefault(), "Team Player 1: %s, ID: %s",
                                             mPlayerList.getJSONObject("TeamPlayer1").getString("name"),
                                             mPlayerList.getJSONObject("TeamPlayer1").getString("id")));
@@ -484,7 +489,8 @@ public class SelectPlayers extends AppCompatActivity {
                                 }
                                 if (mPlayerList.has("TeamPlayer2") &&
                                         player != FB_TEAM_PLAYER2 &&
-                                        mPlayerList.getJSONObject("TeamPlayer2").getString("id").equalsIgnoreCase(mFriend.getId())) {
+                                        (mPlayerList.getJSONObject("TeamPlayer2").has("id") &&
+                                                mPlayerList.getJSONObject("TeamPlayer2").getString("id").equalsIgnoreCase(mFriend.getId()))) {
                                     Log.i(this.toString(), String.format(Locale.getDefault(), "Team Player 2: %s, ID: %s",
                                             mPlayerList.getJSONObject("TeamPlayer2").getString("name"),
                                             mPlayerList.getJSONObject("TeamPlayer2").getString("id")));
@@ -492,7 +498,8 @@ public class SelectPlayers extends AppCompatActivity {
                                 }
                                 if (mPlayerList.has("OpponentPlayer1") &&
                                         player != FB_OPPONENT_PLAYER1 &&
-                                        mPlayerList.getJSONObject("OpponentPlayer1").getString("id").equalsIgnoreCase(mFriend.getId())) {
+                                        (mPlayerList.getJSONObject("OpponentPlayer1").has("id") &&
+                                                mPlayerList.getJSONObject("OpponentPlayer1").getString("id").equalsIgnoreCase(mFriend.getId()))) {
                                     Log.i(this.toString(), String.format(Locale.getDefault(), "Opponent Player 1: %s, ID: %s",
                                             mPlayerList.getJSONObject("OpponentPlayer1").getString("name"),
                                             mPlayerList.getJSONObject("OpponentPlayer1").getString("id")));
@@ -500,7 +507,8 @@ public class SelectPlayers extends AppCompatActivity {
                                 }
                                 if (mPlayerList.has("OpponentPlayer2") &&
                                         player != FB_OPPONENT_PLAYER2 &&
-                                        mPlayerList.getJSONObject("OpponentPlayer2").getString("id").equalsIgnoreCase(mFriend.getId())) {
+                                        (mPlayerList.getJSONObject("OpponentPlayer2").has("id") &&
+                                                mPlayerList.getJSONObject("OpponentPlayer2").getString("id").equalsIgnoreCase(mFriend.getId()))) {
                                     Log.i(this.toString(), String.format(Locale.getDefault(), "Opponent Player 2: %s, ID: %s",
                                             mPlayerList.getJSONObject("OpponentPlayer2").getString("name"),
                                             mPlayerList.getJSONObject("OpponentPlayer2").getString("id")));
