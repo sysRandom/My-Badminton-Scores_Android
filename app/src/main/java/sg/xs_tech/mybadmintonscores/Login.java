@@ -56,13 +56,6 @@ public class Login extends AppCompatActivity {
                 queryData.put("fb_app_id", getResources().getString(R.string.facebook_app_id));
                 queryData.put("fb_id", accessToken.getUserId());
                 queryData.put("fb_ct", accessToken.getToken());
-//                if (profile != null) {
-//                    queryData.put("fb_name", profile.getName());
-//                    queryData.put("fb_fname", profile.getFirstName());
-//                    queryData.put("fb_mname", profile.getMiddleName());
-//                    queryData.put("fb_lname", profile.getLastName());
-//                    queryData.put("fb_uri", profile.getLinkUri());
-//                }
                 JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                         Request.Method.POST,
                         getResources().getString(R.string.member_login_api_url),
@@ -91,41 +84,9 @@ public class Login extends AppCompatActivity {
             loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
                 @Override
                 public void onSuccess(LoginResult loginResult) {
-                    try {
-                        Log.i(this.toString(), "Facebook login successful!");
-                        appEventsLogger.logEvent("FACEBOOK_LOGIN_SUCCESS");
-                        queryData.put("fb_app_id", getResources().getString(R.string.facebook_app_id));
-                        queryData.put("fb_id", accessToken.getUserId());
-                        queryData.put("fb_ct", accessToken.getToken());
-//                        if (profile != null) {
-//                            queryData.put("fb_name", profile.getName());
-//                            queryData.put("fb_fname", profile.getFirstName());
-//                            queryData.put("fb_mname", profile.getMiddleName());
-//                            queryData.put("fb_lname", profile.getLastName());
-//                            queryData.put("fb_uri", profile.getLinkUri());
-//                        }
-                        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                                Request.Method.POST,
-                                getResources().getString(R.string.member_login_api_url),
-                                queryData, new Response.Listener<JSONObject>() {
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                Log.i(this.toString(), "Login Response: " + response.toString());
-                                finish();
-                            }
-                        }, new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                if (error.networkResponse != null && error.networkResponse.data != null) {
-                                    VolleyError volleyError = new VolleyError(new String(error.networkResponse.data));
-                                    Log.i(this.toString(), "Response error message: " + volleyError.getMessage());
-                                }
-                            }
-                        });
-                        Volley.newRequestQueue(getApplicationContext()).add(jsonObjectRequest);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                    Log.i(this.toString(), "Facebook login successful!");
+                    appEventsLogger.logEvent("FACEBOOK_LOGIN_SUCCESS");
+                    finish();
                 }
 
                 @Override
