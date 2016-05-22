@@ -64,7 +64,7 @@ public class NewMatch extends AppCompatActivity implements DatePickerDialog.OnDa
         final JSONObject queryData = new JSONObject();
 
         int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
+        int month = calendar.get(Calendar.MONTH) + 1;
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
         btnDatePicker.setText(String.format(Locale.getDefault(),"%d-%d-%d",day,month,year));
@@ -83,6 +83,7 @@ public class NewMatch extends AppCompatActivity implements DatePickerDialog.OnDa
                     queryData.put("fb_app_id", getResources().getString(R.string.facebook_app_id));
                     queryData.put("fb_id", accessToken.getUserId());
                     queryData.put("token", accessToken.getToken());
+                    queryData.put("match_date", btnDatePicker.getText().toString());
                     queryData.put("game_type", mMatchType);
                     queryData.put("team_score", mTeamScore);
                     queryData.put("opponent_score", mOpponentScore);
@@ -226,7 +227,7 @@ public class NewMatch extends AppCompatActivity implements DatePickerDialog.OnDa
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             final Calendar calendar = Calendar.getInstance();
             int year = calendar.get(Calendar.YEAR);
-            int month = calendar.get(Calendar.MONTH);
+            int month = calendar.get(Calendar.MONTH) + 1;
             int day = calendar.get(Calendar.DAY_OF_MONTH);
             Log.i(this.toString(), "onCreateDialog: " + day + " " + month + " " + year);
             return new DatePickerDialog(getActivity(),(NewMatch)getActivity(),year,month,day);
