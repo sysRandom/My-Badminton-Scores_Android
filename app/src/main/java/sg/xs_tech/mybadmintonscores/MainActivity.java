@@ -133,7 +133,8 @@ public class MainActivity extends AppCompatActivity {
             case View.VISIBLE:
                 if (btnAddMatch.getVisibility() == View.INVISIBLE) {
                     Log.i(this.toString(), "Setting buttons visible");
-                    btnListMatch.setVisibility(View.VISIBLE);
+                    // TODO: 24/5/16 Re-enable List Match button
+//                    btnListMatch.setVisibility(View.VISIBLE);
                     btnAddMatch.setVisibility(View.VISIBLE);
                 }
                 break;
