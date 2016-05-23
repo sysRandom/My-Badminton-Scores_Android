@@ -8,6 +8,7 @@
     <string name="member_update_api_url">https://devel.xs-tech.sg/api/public/member/update</string>
     <string name="post_match_api_url">https://devel.xs-tech.sg/api/public/badminton/match</string>
 
+    // New Match view
     <string name="add_match_button">New Match</string>
     <string name="add_match_title">New Match</string>
     <string name="add_match_label_date">Match Date:</string>
@@ -21,6 +22,7 @@
     <string name="add_match_submit_match">Submit Match</string>
     <string name="add_match_submit_successful">Match submitted successfully</string>
 
+    // Select Players view
     <string name="select_players_title">Choose players</string>
     <string name="select_players_team">Player Team</string>
     <string name="select_players_opponent">Opponent</string>
@@ -29,10 +31,6 @@
     <string name="select_players_player2">Player 2</string>
     <string name="select_fb_player2">FB Player 2</string>
     <string name="select_players_submit">Submit Players</string>
-    <string name="missing_team_player1">Please select Team Player 1</string>
-    <string name="missing_team_player2">Please select Team Player 2</string>
-    <string name="missing_opponent_player1">Please select Opponent Player 1</string>
-    <string name="missing_opponent_player2">Please select Opponent Player 2</string>
 
     <string name="player_name_prompt">Enter player name:</string>
     <string name="player_name_submit">Confirm player</string>
@@ -40,5 +38,25 @@
 
     <string name="friends_list_title">Friends</string>
 
+    // Match History view
     <string name="list_match_button">View Match History</string>
+    
+    // Error messages
+    <string name="missing_fb_app_id">Unauthorised Application</string>
+    <string name="missing_token">Unauthorised Access</string>
+    <string name="missing_identification">Unauthorised Access</string>
+    <string name="invalid_score">Invalid Score Entered</string>
+    <string name="invalid_team_score">Invalid Team Score</string>
+    <string name="invalid_opponent_score">Invalid Opponent Score</string>
+    <string name="not_a_member">Unauthorised Access</string>
+    <string name="token_mismatch">Unauthorised Access</string>
+    <string name="missing_team_player1">Please select Team Player 1</string>
+    <string name="missing_team_player2">Please select Team Player 2</string>
+    <string name="missing_opponent_player1">Please select Opponent Player 1</string>
+    <string name="missing_opponent_player2">Please select Opponent Player 2</string>
+    <string name="missing_team_player_details">Team Player 1 has not authorised this application</string>
+    <string name="missing_opponent_details">Opponent Player 1 has not authorised this application</string>
+    <string name="facebook_graph_error">Facebook has presented error. Please try again later.</string>
+    <string name="facebook_error">Facebook has presented error. Please try again later.</string>
+    <string name="server_error">Server experienced an error. Please try again later.</string>
 </resources>
