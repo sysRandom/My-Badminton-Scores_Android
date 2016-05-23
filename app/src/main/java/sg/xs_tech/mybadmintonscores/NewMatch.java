@@ -119,14 +119,14 @@ public class NewMatch extends AppCompatActivity implements DatePickerDialog.OnDa
                             queryData.put("opponent_player2", mSelectedPlayers.getJSONObject("OpponentPlayer2").getString("name"));
                         }
                     }
-                    Log.i(this.toString(), "Query string: " + queryData.toString());
+//                    Log.i(this.toString(), "Query string: " + queryData.toString());
                     JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                             Request.Method.POST,
                             getResources().getString(R.string.post_match_api_url),
                             queryData, new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
-                            Log.i(this.toString(), "Post Match Response: " + response.toString());
+//                            Log.i(this.toString(), "Post Match Response: " + response.toString());
                             Toast.makeText(NewMatch.this, getResources().getString(R.string.add_match_submit_successful), Toast.LENGTH_SHORT).show();
                             finish();
                         }
@@ -135,6 +135,7 @@ public class NewMatch extends AppCompatActivity implements DatePickerDialog.OnDa
                         public void onErrorResponse(VolleyError error) {
                             if (error.networkResponse != null && error.networkResponse.data != null) {
                                 VolleyError volleyError = new VolleyError(new String(error.networkResponse.data));
+                                showToastError(volleyError.getMessage());
                                 Log.i(this.toString(), "Response error message: " + volleyError.getMessage());
                             }
                         }
@@ -157,18 +158,16 @@ public class NewMatch extends AppCompatActivity implements DatePickerDialog.OnDa
                                 try {
                                     JSONArray mFriends = response.getJSONObject().getJSONArray("data");
                                     JSONObject mSummary = response.getJSONObject().getJSONObject("summary");
-                                    Log.i(this.toString(), "Friends List Array: " + mFriends.toString());
-                                    Log.i(this.toString(), "Friends List Summary: " + mSummary.getInt("total_count"));
-                                    Log.i(this.toString(), String.format(
-                                            "Avail friends: %d, total friends: %d",
-                                            mFriends.length(), mSummary.getInt("total_count")
-                                    ));
+//                                    Log.i(this.toString(), "Friends List Array: " + mFriends.toString());
+//                                    Log.i(this.toString(), "Friends List Summary: " + mSummary.getInt("total_count"));
+//                                    Log.i(this.toString(), String.format(
+//                                            "Avail friends: %d, total friends: %d",
+//                                            mFriends.length(), mSummary.getInt("total_count")
+//                                    ));
                                     Intent intent = new Intent(NewMatch.this, SelectPlayers.class);
                                     intent.putExtra("match_type", mMatchType);
                                     intent.putExtra("friends_count", mSummary.getInt("total_count"));
-//                                    intent.putExtra("friends", mFriends.toString());
                                     startActivityForResult(intent, PICK_PLAYERS);
-//                                    startActivity(intent);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -216,7 +215,6 @@ public class NewMatch extends AppCompatActivity implements DatePickerDialog.OnDa
 
     @Override
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-//        Button btnDate = (Button) view.findViewById(R.id.date_picker);
         Log.i(this.toString(), "onDateSet: " + dayOfMonth + " " + monthOfYear + " " + year);
         btnDatePicker.setText(String.format(Locale.getDefault(),"%d-%d-%d", dayOfMonth, monthOfYear, year));
     }
@@ -232,6 +230,63 @@ public class NewMatch extends AppCompatActivity implements DatePickerDialog.OnDa
             Log.i(this.toString(), "onCreateDialog: " + day + " " + month + " " + year);
             return new DatePickerDialog(getActivity(),(NewMatch)getActivity(),year,month,day);
         }
+    }
+
+    private void showToastError(String error) {
+        String msg = "";
+        switch (error) {
+            case "missing_fb_app_id":
+                msg = getString(R.string.missing_fb_app_id);
+                break;
+            case "missing_token":
+                msg = getString(R.string.missing_token);
+                break;
+            case "missing_identification":
+                msg = getString(R.string.missing_identification);
+                break;
+            case "invalid_score":
+                msg = getString(R.string.invalid_score);
+                break;
+            case "invalid_team_score":
+                msg = getString(R.string.invalid_team_score);
+                break;
+            case "invalid_opponent_score":
+                msg = getString(R.string.invalid_opponent_score);
+                break;
+            case "not_a_member":
+                msg = getString(R.string.not_a_member);
+                break;
+            case "token_mismatch":
+                msg = getString(R.string.token_mismatch);
+                break;
+            case "missing_team_player1":
+                msg = getString(R.string.missing_team_player1);
+                break;
+            case "missing_team_player2":
+                msg = getString(R.string.missing_team_player2);
+                break;
+            case "missing_opponent_player1":
+                msg = getString(R.string.missing_opponent_player1);
+                break;
+            case "missing_opponent_player2":
+                msg = getString(R.string.missing_opponent_player2);
+                break;
+            case "missing_team_player_details":
+                msg = getString(R.string.missing_team_player_details);
+                break;
+            case "missing_opponent_details":
+                msg = getString(R.string.missing_opponent_details);
+                break;
+            case "facebook_graph_error":
+                msg = getString(R.string.facebook_graph_error);
+                break;
+            case "facebook_error":
+                msg = getString(R.string.facebook_error);
+                break;
+            default:
+                msg = getString(R.string.server_error);
+        }
+        Toast.makeText(NewMatch.this, msg, Toast.LENGTH_SHORT).show();
     }
 }
 
