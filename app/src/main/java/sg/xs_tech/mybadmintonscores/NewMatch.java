@@ -133,10 +133,17 @@ public class NewMatch extends AppCompatActivity implements DatePickerDialog.OnDa
                     }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            if (error.networkResponse != null && error.networkResponse.data != null) {
-                                VolleyError volleyError = new VolleyError(new String(error.networkResponse.data));
-                                showToastError(volleyError.getMessage());
-                                Log.i(this.toString(), "Response error message: " + volleyError.getMessage());
+                            try {
+                                if (error.networkResponse != null && error.networkResponse.data != null) {
+                                    VolleyError volleyError = new VolleyError(new String(error.networkResponse.data));
+                                    final JSONObject ErrMsgFull = new JSONObject(volleyError.getMessage());
+                                    final String MsgFull = ErrMsgFull.getJSONObject("error").getString("message");
+                                    final String Msg = MsgFull.substring(MsgFull.indexOf(":") + 1).trim();
+                                    showToastError(Msg);
+                                    Log.i(this.toString(), "Response error message: " + volleyError.getMessage());
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
                         }
                     });
@@ -158,12 +165,6 @@ public class NewMatch extends AppCompatActivity implements DatePickerDialog.OnDa
                                 try {
                                     JSONArray mFriends = response.getJSONObject().getJSONArray("data");
                                     JSONObject mSummary = response.getJSONObject().getJSONObject("summary");
-//                                    Log.i(this.toString(), "Friends List Array: " + mFriends.toString());
-//                                    Log.i(this.toString(), "Friends List Summary: " + mSummary.getInt("total_count"));
-//                                    Log.i(this.toString(), String.format(
-//                                            "Avail friends: %d, total friends: %d",
-//                                            mFriends.length(), mSummary.getInt("total_count")
-//                                    ));
                                     Intent intent = new Intent(NewMatch.this, SelectPlayers.class);
                                     intent.putExtra("match_type", mMatchType);
                                     intent.putExtra("friends_count", mSummary.getInt("total_count"));
@@ -232,7 +233,7 @@ public class NewMatch extends AppCompatActivity implements DatePickerDialog.OnDa
         }
     }
 
-    private void showToastError(String error) {
+    private void showToastError(final String error) {
         String msg = "";
         switch (error) {
             case "missing_fb_app_id":
