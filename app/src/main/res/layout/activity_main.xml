@@ -14,12 +14,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="invisible"
-        android:text="@string/add_match_button" />
+        android:text="@string/add_match_button"
+        android:onClick="newMatch"/>
     <Button
         android:id="@+id/view_match_history"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
         android:visibility="invisible"
-        android:text="@string/list_match_button" />
+        android:text="@string/list_match_button"
+        android:onClick="matchHistory"/>
 </RelativeLayout>

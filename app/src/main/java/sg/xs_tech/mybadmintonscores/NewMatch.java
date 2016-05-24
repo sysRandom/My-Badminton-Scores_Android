@@ -35,7 +35,7 @@ public class NewMatch extends AppCompatActivity implements DatePickerDialog.OnDa
     static final int PICK_PLAYERS = 1;
 
     private Button btnDatePicker;
-    private Button btnSubmitMatch;
+//    private Button btnSubmitMatch;
     private Button btnSelectPlayers;
 
     private EditText etTeamScore;

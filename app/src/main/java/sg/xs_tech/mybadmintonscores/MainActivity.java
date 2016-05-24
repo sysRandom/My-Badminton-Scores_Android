@@ -24,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
     private AccessTokenTracker accessTokenTracker;
     private AccessToken accessToken;
 
+    private AppEventsLogger appEventsLogger;
+
     private Button btnAddMatch;
     private Button btnListMatch;
 
@@ -34,26 +36,23 @@ public class MainActivity extends AppCompatActivity {
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(getApplication());
-        final AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(getApplicationContext());
+        appEventsLogger = AppEventsLogger.newLogger(getApplicationContext());
+
         final JSONObject queryData = new JSONObject();
 
         btnAddMatch = (Button) findViewById(R.id.add_match);
         btnListMatch = (Button) findViewById(R.id.view_match_history);
-        btnAddMatch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i(this.toString(), "Adding new match");
-                Intent intent = new Intent(MainActivity.this, NewMatch.class);
-                appEventsLogger.logEvent("START_NEW_MATCH");
-                startActivity(intent);
-            }
-        });
-        btnListMatch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i(this.toString(), "Listing match history");
-            }
-        });
+//        btnAddMatch.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//            }
+//        });
+//        btnListMatch.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Log.i(this.toString(), "Listing match history");
+//            }
+//        });
 
         accessTokenTracker = new AccessTokenTracker() {
             @Override
@@ -145,6 +144,17 @@ public class MainActivity extends AppCompatActivity {
                     btnAddMatch.setVisibility(View.INVISIBLE);
                 }
         }
+    }
+
+    public void newMatch(View view) {
+        Log.i(this.toString(), "Adding new match");
+        Intent intent = new Intent(MainActivity.this, NewMatch.class);
+        appEventsLogger.logEvent("START_NEW_MATCH");
+        startActivity(intent);
+    }
+
+    public void matchHistory(View view) {
+        Log.i(this.toString(), "Listing match history");
     }
 
     @Override
