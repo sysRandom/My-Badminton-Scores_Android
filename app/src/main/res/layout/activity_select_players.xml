@@ -29,14 +29,16 @@
             android:layout_height="wrap_content"
             android:text="@string/select_players_player1"
             android:id="@+id/team_player1"
-            android:layout_weight=".5" />
+            android:layout_weight=".5"
+            android:onClick="onSelectTeamPlayer1"/>
 
         <Button
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/select_fb_player1"
             android:id="@+id/fb_team_player1"
-            android:layout_weight=".5" />
+            android:layout_weight=".5"
+            android:onClick="onSelectFbTeamPlayer1"/>
     </LinearLayout>
 
     <LinearLayout
@@ -50,14 +52,16 @@
             android:text="@string/select_players_player2"
             android:id="@+id/team_player2"
             android:visibility="visible"
-            android:layout_weight=".5" />
+            android:layout_weight=".5"
+            android:onClick="onSelectTeamPlayer2"/>
 
         <Button
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/select_fb_player2"
             android:id="@+id/fb_team_player2"
-            android:layout_weight=".5" />
+            android:layout_weight=".5"
+            android:onClick="onSelectFbTeamPlayer2"/>
     </LinearLayout>
 
     <TextView
@@ -79,14 +83,16 @@
             android:layout_height="wrap_content"
             android:text="@string/select_players_player1"
             android:id="@+id/opponent_player1"
-            android:layout_weight=".5" />
+            android:layout_weight=".5"
+            android:onClick="onSelectOpponentPlayer1"/>
 
         <Button
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/select_fb_player1"
             android:id="@+id/fb_opponent_player1"
-            android:layout_weight=".5" />
+            android:layout_weight=".5"
+            android:onClick="onSelectFbOpponentPlayer1"/>
     </LinearLayout>
 
     <LinearLayout
@@ -100,14 +106,16 @@
             android:text="@string/select_players_player2"
             android:id="@+id/opponent_player2"
             android:visibility="visible"
-            android:layout_weight=".5" />
+            android:layout_weight=".5"
+            android:onClick="onSelectOpponentPlayer2"/>
 
         <Button
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/select_fb_player2"
             android:id="@+id/fb_opponent_player2"
-            android:layout_weight=".5" />
+            android:layout_weight=".5"
+            android:onClick="onSelectFbOpponentPlayer2"/>
     </LinearLayout>
 
     <Space
@@ -124,7 +132,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/select_players_submit"
-            android:id="@+id/submit_players" />
+            android:id="@+id/submit_players"
+            android:onClick="onSubmitPlayers"/>
 
         <TextView
             android:layout_width="match_parent"
