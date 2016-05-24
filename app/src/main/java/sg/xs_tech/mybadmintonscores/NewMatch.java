@@ -24,7 +24,6 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -36,7 +35,7 @@ public class NewMatch extends AppCompatActivity implements DatePickerDialog.OnDa
 
     private Button btnDatePicker;
 //    private Button btnSubmitMatch;
-    private Button btnSelectPlayers;
+//    private Button btnSelectPlayers;
 
     private EditText etTeamScore;
     private EditText etOpponentScore;
@@ -46,6 +45,7 @@ public class NewMatch extends AppCompatActivity implements DatePickerDialog.OnDa
     private Integer mOpponentScore = 0;
 
     private JSONObject mSelectedPlayers = new JSONObject();
+    private AccessToken accessToken;
 
     private final Calendar calendar = Calendar.getInstance();
 
@@ -55,128 +55,18 @@ public class NewMatch extends AppCompatActivity implements DatePickerDialog.OnDa
         setContentView(R.layout.activity_new_match);
 
         btnDatePicker = (Button) findViewById(R.id.date_picker);
-        btnSubmitMatch = (Button) findViewById(R.id.submit_match);
-        btnSelectPlayers = (Button) findViewById(R.id.select_players);
+//        final Button btnSubmitMatch = (Button) findViewById(R.id.submit_match);
+//        final Button btnSelectPlayers = (Button) findViewById(R.id.select_players);
         etTeamScore = (EditText) findViewById(R.id.team_score);
         etOpponentScore = (EditText) findViewById(R.id.opponent_score);
 
-        final AccessToken accessToken = AccessToken.getCurrentAccessToken();
-        final JSONObject queryData = new JSONObject();
+        accessToken = AccessToken.getCurrentAccessToken();
 
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH) + 1;
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
         btnDatePicker.setText(String.format(Locale.getDefault(),"%d-%d-%d",day,month,year));
-        btnSubmitMatch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    mTeamScore = 0;
-                    mOpponentScore = 0;
-                    if (etTeamScore.getText().toString().trim().length() > 0) {
-                        mTeamScore = Integer.parseInt(etTeamScore.getText().toString());
-                    }
-                    if (etOpponentScore.getText().toString().trim().length() > 0) {
-                        mOpponentScore = Integer.parseInt(etOpponentScore.getText().toString());
-                    }
-                    queryData.put("fb_app_id", getResources().getString(R.string.facebook_app_id));
-                    queryData.put("fb_id", accessToken.getUserId());
-                    queryData.put("token", accessToken.getToken());
-                    queryData.put("match_date", btnDatePicker.getText().toString());
-                    queryData.put("game_type", mMatchType);
-                    queryData.put("team_score", mTeamScore);
-                    queryData.put("opponent_score", mOpponentScore);
-                    if (mSelectedPlayers.has("TeamPlayer1")) {
-                        if (mSelectedPlayers.getJSONObject("TeamPlayer1").has("id")) {
-                            queryData.put("team_player1", mSelectedPlayers.getJSONObject("TeamPlayer1").getString("id"));
-                        }
-                        else {
-                            queryData.put("team_player1", mSelectedPlayers.getJSONObject("TeamPlayer1").getString("name"));
-                        }
-                    }
-                    if (mSelectedPlayers.has("TeamPlayer2")) {
-                        if (mSelectedPlayers.getJSONObject("TeamPlayer2").has("id")) {
-                            queryData.put("team_player2", mSelectedPlayers.getJSONObject("TeamPlayer2").getString("id"));
-                        }
-                        else {
-                            queryData.put("team_player2", mSelectedPlayers.getJSONObject("TeamPlayer2").getString("name"));
-                        }
-                    }
-                    if (mSelectedPlayers.has("OpponentPlayer1")) {
-                        if (mSelectedPlayers.getJSONObject("OpponentPlayer1").has("id")) {
-                            queryData.put("opponent_player1", mSelectedPlayers.getJSONObject("OpponentPlayer1").getString("id"));
-                        }
-                        else {
-                            queryData.put("opponent_player1", mSelectedPlayers.getJSONObject("OpponentPlayer1").getString("name"));
-                        }
-                    }
-                    if (mSelectedPlayers.has("OpponentPlayer2")) {
-                        if (mSelectedPlayers.getJSONObject("OpponentPlayer2").has("id")) {
-                            queryData.put("opponent_player2", mSelectedPlayers.getJSONObject("OpponentPlayer2").getString("id"));
-                        }
-                        else {
-                            queryData.put("opponent_player2", mSelectedPlayers.getJSONObject("OpponentPlayer2").getString("name"));
-                        }
-                    }
-//                    Log.i(this.toString(), "Query string: " + queryData.toString());
-                    JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                            Request.Method.POST,
-                            getResources().getString(R.string.post_match_api_url),
-                            queryData, new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-//                            Log.i(this.toString(), "Post Match Response: " + response.toString());
-                            Toast.makeText(NewMatch.this, getResources().getString(R.string.add_match_submit_successful), Toast.LENGTH_SHORT).show();
-                            finish();
-                        }
-                    }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            try {
-                                if (error.networkResponse != null && error.networkResponse.data != null) {
-                                    VolleyError volleyError = new VolleyError(new String(error.networkResponse.data));
-                                    final JSONObject ErrMsgFull = new JSONObject(volleyError.getMessage());
-                                    final String MsgFull = ErrMsgFull.getJSONObject("error").getString("message");
-                                    final String Msg = MsgFull.substring(MsgFull.indexOf(":") + 1).trim();
-                                    showToastError(Msg);
-                                    Log.i(this.toString(), "Response error message: " + volleyError.getMessage());
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-                    Volley.newRequestQueue(getApplicationContext()).add(jsonObjectRequest);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        btnSelectPlayers.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new GraphRequest(
-                        AccessToken.getCurrentAccessToken(), "/me/friends", null, HttpMethod.GET,
-                        new GraphRequest.Callback() {
-                            @Override
-                            public void onCompleted(GraphResponse response) {
-                                Log.i(this.toString(), "Friends List Result: " + response.toString());
-                                try {
-                                    JSONArray mFriends = response.getJSONObject().getJSONArray("data");
-                                    JSONObject mSummary = response.getJSONObject().getJSONObject("summary");
-                                    Intent intent = new Intent(NewMatch.this, SelectPlayers.class);
-                                    intent.putExtra("match_type", mMatchType);
-                                    intent.putExtra("friends_count", mSummary.getInt("total_count"));
-                                    startActivityForResult(intent, PICK_PLAYERS);
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-                ).executeAsync();
-            }
-        });
     }
 
     @Override
@@ -214,6 +104,112 @@ public class NewMatch extends AppCompatActivity implements DatePickerDialog.OnDa
         }
     }
 
+    public void onSubmitMatch(View view) {
+        try {
+            final JSONObject queryData = new JSONObject();
+            mTeamScore = 0;
+            mOpponentScore = 0;
+            if (etTeamScore.getText().toString().trim().length() > 0) {
+                mTeamScore = Integer.parseInt(etTeamScore.getText().toString());
+            }
+            if (etOpponentScore.getText().toString().trim().length() > 0) {
+                mOpponentScore = Integer.parseInt(etOpponentScore.getText().toString());
+            }
+            queryData.put("fb_app_id", getResources().getString(R.string.facebook_app_id));
+            queryData.put("fb_id", accessToken.getUserId());
+            queryData.put("token", accessToken.getToken());
+            queryData.put("match_date", btnDatePicker.getText().toString());
+            queryData.put("game_type", mMatchType);
+            queryData.put("team_score", mTeamScore);
+            queryData.put("opponent_score", mOpponentScore);
+            if (mSelectedPlayers.has("TeamPlayer1")) {
+                if (mSelectedPlayers.getJSONObject("TeamPlayer1").has("id")) {
+                    queryData.put("team_player1", mSelectedPlayers.getJSONObject("TeamPlayer1").getString("id"));
+                }
+                else {
+                    queryData.put("team_player1", mSelectedPlayers.getJSONObject("TeamPlayer1").getString("name"));
+                }
+            }
+            if (mSelectedPlayers.has("TeamPlayer2")) {
+                if (mSelectedPlayers.getJSONObject("TeamPlayer2").has("id")) {
+                    queryData.put("team_player2", mSelectedPlayers.getJSONObject("TeamPlayer2").getString("id"));
+                }
+                else {
+                    queryData.put("team_player2", mSelectedPlayers.getJSONObject("TeamPlayer2").getString("name"));
+                }
+            }
+            if (mSelectedPlayers.has("OpponentPlayer1")) {
+                if (mSelectedPlayers.getJSONObject("OpponentPlayer1").has("id")) {
+                    queryData.put("opponent_player1", mSelectedPlayers.getJSONObject("OpponentPlayer1").getString("id"));
+                }
+                else {
+                    queryData.put("opponent_player1", mSelectedPlayers.getJSONObject("OpponentPlayer1").getString("name"));
+                }
+            }
+            if (mSelectedPlayers.has("OpponentPlayer2")) {
+                if (mSelectedPlayers.getJSONObject("OpponentPlayer2").has("id")) {
+                    queryData.put("opponent_player2", mSelectedPlayers.getJSONObject("OpponentPlayer2").getString("id"));
+                }
+                else {
+                    queryData.put("opponent_player2", mSelectedPlayers.getJSONObject("OpponentPlayer2").getString("name"));
+                }
+            }
+//                    Log.i(this.toString(), "Query string: " + queryData.toString());
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                    Request.Method.POST,
+                    getResources().getString(R.string.post_match_api_url),
+                    queryData, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+//                            Log.i(this.toString(), "Post Match Response: " + response.toString());
+                    Toast.makeText(NewMatch.this, getResources().getString(R.string.add_match_submit_successful), Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    try {
+                        if (error.networkResponse != null && error.networkResponse.data != null) {
+                            VolleyError volleyError = new VolleyError(new String(error.networkResponse.data));
+                            final JSONObject ErrMsgFull = new JSONObject(volleyError.getMessage());
+                            final String MsgFull = ErrMsgFull.getJSONObject("error").getString("message");
+                            final String Msg = MsgFull.substring(MsgFull.indexOf(":") + 1).trim();
+                            showToastError(Msg);
+                            Log.i(this.toString(), "Response error message: " + volleyError.getMessage());
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            Volley.newRequestQueue(getApplicationContext()).add(jsonObjectRequest);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void onSelectPlayer(View view) {
+        new GraphRequest(
+                AccessToken.getCurrentAccessToken(), "/me/friends", null, HttpMethod.GET,
+                new GraphRequest.Callback() {
+                    @Override
+                    public void onCompleted(GraphResponse response) {
+                        Log.i(this.toString(), "Friends List Result: " + response.toString());
+                        try {
+//                            JSONArray mFriends = response.getJSONObject().getJSONArray("data");
+                            JSONObject mSummary = response.getJSONObject().getJSONObject("summary");
+                            Intent intent = new Intent(NewMatch.this, SelectPlayers.class);
+                            intent.putExtra("match_type", mMatchType);
+                            intent.putExtra("friends_count", mSummary.getInt("total_count"));
+                            startActivityForResult(intent, PICK_PLAYERS);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+        ).executeAsync();
+    }
+
     @Override
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
         Log.i(this.toString(), "onDateSet: " + dayOfMonth + " " + monthOfYear + " " + year);
@@ -234,7 +230,7 @@ public class NewMatch extends AppCompatActivity implements DatePickerDialog.OnDa
     }
 
     private void showToastError(final String error) {
-        String msg = "";
+        String msg;
         switch (error) {
             case "missing_fb_app_id":
                 msg = getString(R.string.missing_fb_app_id);

@@ -121,7 +121,8 @@
             android:id="@+id/submit_match"
             android:layout_below="@+id/select_players"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:onClick="onSubmitMatch"/>
 
         <Button
             android:layout_width="match_parent"
@@ -130,7 +131,8 @@
             android:id="@+id/select_players"
             android:layout_below="@+id/linearLayout3"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:onClick="onSelectPlayer"/>
     </LinearLayout>
 
 </RelativeLayout>
