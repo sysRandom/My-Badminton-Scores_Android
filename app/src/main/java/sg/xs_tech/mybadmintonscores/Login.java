@@ -17,8 +17,6 @@ import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
-import org.json.JSONObject;
-
 public class Login extends AppCompatActivity {
     private ConnectivityManager connectivityManager;
     private NetworkInfo networkInfo;
@@ -35,7 +33,6 @@ public class Login extends AppCompatActivity {
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         final AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(getApplicationContext());
-        final JSONObject queryData = new JSONObject();
         final LoginButton loginButton = (LoginButton) findViewById(R.id.fb_login);
 
         callbackManager = CallbackManager.Factory.create();
