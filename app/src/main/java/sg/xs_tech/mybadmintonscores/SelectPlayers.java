@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +24,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class SelectPlayers extends AppCompatActivity {
 
@@ -101,16 +99,16 @@ public class SelectPlayers extends AppCompatActivity {
                 new GraphRequest.Callback() {
                     @Override
                     public void onCompleted(GraphResponse response) {
-                        Log.i(this.toString(), "Friends List Result: " + response.toString());
+//                        Log.i(this.toString(), "Friends List Result: " + response.toString());
                         try {
                             final JSONArray mFriends = response.getJSONObject().getJSONArray("data");
                             JSONObject mSummary = response.getJSONObject().getJSONObject("summary");
-                            Log.i(this.toString(), "Friends List Array: " + mFriends.toString());
-                            Log.i(this.toString(), "Friends List Summary: " + mSummary.getInt("total_count"));
-                            Log.i(this.toString(), String.format(
-                                    "Avail friends: %d, total friends: %d",
-                                    mFriends.length(), mSummary.getInt("total_count")
-                            ));
+//                            Log.i(this.toString(), "Friends List Array: " + mFriends.toString());
+//                            Log.i(this.toString(), "Friends List Summary: " + mSummary.getInt("total_count"));
+//                            Log.i(this.toString(), String.format(
+//                                    "Avail friends: %d, total friends: %d",
+//                                    mFriends.length(), mSummary.getInt("total_count")
+//                            ));
 
                             /**
                              * This loop checks for ID or Names previously selected does not gets
@@ -118,7 +116,7 @@ public class SelectPlayers extends AppCompatActivity {
                              */
 
                             // Adds user into 1st on the list
-                            Log.i(this.toString(), "Adding myself to list");
+//                            Log.i(this.toString(), "Adding myself to list");
                             Boolean has_me = false;
                             if (mPlayerList.has("TeamPlayer1") &&
                                     player != FB_TEAM_PLAYER1 &&
@@ -161,42 +159,42 @@ public class SelectPlayers extends AppCompatActivity {
                                         player != FB_TEAM_PLAYER1 &&
                                         (mPlayerList.getJSONObject("TeamPlayer1").has("id") &&
                                                 mPlayerList.getJSONObject("TeamPlayer1").getString("id").equalsIgnoreCase(mFriend.getId()))) {
-                                    Log.i(this.toString(), String.format(Locale.getDefault(), "Team Player 1: %s, ID: %s",
-                                            mPlayerList.getJSONObject("TeamPlayer1").getString("name"),
-                                            mPlayerList.getJSONObject("TeamPlayer1").getString("id")));
+//                                    Log.i(this.toString(), String.format(Locale.getDefault(), "Team Player 1: %s, ID: %s",
+//                                            mPlayerList.getJSONObject("TeamPlayer1").getString("name"),
+//                                            mPlayerList.getJSONObject("TeamPlayer1").getString("id")));
                                     continue;
                                 }
                                 if (mPlayerList.has("TeamPlayer2") &&
                                         player != FB_TEAM_PLAYER2 &&
                                         (mPlayerList.getJSONObject("TeamPlayer2").has("id") &&
                                                 mPlayerList.getJSONObject("TeamPlayer2").getString("id").equalsIgnoreCase(mFriend.getId()))) {
-                                    Log.i(this.toString(), String.format(Locale.getDefault(), "Team Player 2: %s, ID: %s",
-                                            mPlayerList.getJSONObject("TeamPlayer2").getString("name"),
-                                            mPlayerList.getJSONObject("TeamPlayer2").getString("id")));
+//                                    Log.i(this.toString(), String.format(Locale.getDefault(), "Team Player 2: %s, ID: %s",
+//                                            mPlayerList.getJSONObject("TeamPlayer2").getString("name"),
+//                                            mPlayerList.getJSONObject("TeamPlayer2").getString("id")));
                                     continue;
                                 }
                                 if (mPlayerList.has("OpponentPlayer1") &&
                                         player != FB_OPPONENT_PLAYER1 &&
                                         (mPlayerList.getJSONObject("OpponentPlayer1").has("id") &&
                                                 mPlayerList.getJSONObject("OpponentPlayer1").getString("id").equalsIgnoreCase(mFriend.getId()))) {
-                                    Log.i(this.toString(), String.format(Locale.getDefault(), "Opponent Player 1: %s, ID: %s",
-                                            mPlayerList.getJSONObject("OpponentPlayer1").getString("name"),
-                                            mPlayerList.getJSONObject("OpponentPlayer1").getString("id")));
+//                                    Log.i(this.toString(), String.format(Locale.getDefault(), "Opponent Player 1: %s, ID: %s",
+//                                            mPlayerList.getJSONObject("OpponentPlayer1").getString("name"),
+//                                            mPlayerList.getJSONObject("OpponentPlayer1").getString("id")));
                                     continue;
                                 }
                                 if (mPlayerList.has("OpponentPlayer2") &&
                                         player != FB_OPPONENT_PLAYER2 &&
                                         (mPlayerList.getJSONObject("OpponentPlayer2").has("id") &&
                                                 mPlayerList.getJSONObject("OpponentPlayer2").getString("id").equalsIgnoreCase(mFriend.getId()))) {
-                                    Log.i(this.toString(), String.format(Locale.getDefault(), "Opponent Player 2: %s, ID: %s",
-                                            mPlayerList.getJSONObject("OpponentPlayer2").getString("name"),
-                                            mPlayerList.getJSONObject("OpponentPlayer2").getString("id")));
+//                                    Log.i(this.toString(), String.format(Locale.getDefault(), "Opponent Player 2: %s, ID: %s",
+//                                            mPlayerList.getJSONObject("OpponentPlayer2").getString("name"),
+//                                            mPlayerList.getJSONObject("OpponentPlayer2").getString("id")));
                                     continue;
                                 }
-                                Log.i(this.toString(), "Adding friend: " + mFriend.getFname());
+//                                Log.i(this.toString(), "Adding friend: " + mFriend.getFname());
                                 mFriendsList.add(mFriend);
                             }
-                            Log.i(this.toString(), "getFacebookFriends List: " + mFriendsList.toString());
+//                            Log.i(this.toString(), "getFacebookFriends List: " + mFriendsList.toString());
                             Intent intent = new Intent(SelectPlayers.this, FriendsList.class);
                             intent.putExtra("fbFriends", mFriendsList);
                             startActivityForResult(intent, player);
@@ -215,7 +213,7 @@ public class SelectPlayers extends AppCompatActivity {
             try {
                 Friend selected = data.getParcelableExtra("friend");
                 String the_player = "";
-                Log.i(this.toString(), String.format(Locale.getDefault(), "ID: %s, Name: %s", selected.getId(), selected.getFname()));
+//                Log.i(this.toString(), String.format(Locale.getDefault(), "ID: %s, Name: %s", selected.getId(), selected.getFname()));
                 switch (requestCode) {
                     case FB_TEAM_PLAYER1:
                         the_player = "TeamPlayer1";
@@ -254,7 +252,7 @@ public class SelectPlayers extends AppCompatActivity {
                     try {
                         if (mPlayerList.has("TeamPlayer1")) {
                             if (etName.getText().length() > 0) {
-                                Log.i(this.toString(), "Team Player 1 name is " + etName.getText().toString());
+//                                Log.i(this.toString(), "Team Player 1 name is " + etName.getText().toString());
                                 if (!etName.getText().toString().equalsIgnoreCase(mPlayerList.getJSONObject("TeamPlayer1").getString("name"))) {
                                     JSONObject details = new JSONObject();
                                     details.put("name", etName.getText().toString());
@@ -262,12 +260,12 @@ public class SelectPlayers extends AppCompatActivity {
                                 }
                                 etName.setText("");
                             } else {
-                                Log.i(this.toString(), "Team Player 1 has no name");
+//                                Log.i(this.toString(), "Team Player 1 has no name");
                                 mPlayerList.remove("TeamPlayer1");
                             }
                         } else {
                             if (etName.getText().length() > 0) {
-                                Log.i(this.toString(), "Team Player 1 name is " + etName.getText().toString());
+//                                Log.i(this.toString(), "Team Player 1 name is " + etName.getText().toString());
                                 JSONObject details = new JSONObject();
                                 details.put("name", etName.getText().toString());
                                 mPlayerList.put("TeamPlayer1", details);
@@ -282,7 +280,7 @@ public class SelectPlayers extends AppCompatActivity {
             }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    Log.i(this.toString(), "Team Player 1 name cancelled");
+//                    Log.i(this.toString(), "Team Player 1 name cancelled");
                     ((ViewGroup) player_name_dialog.getParent()).removeAllViews();
                 }
             });
@@ -314,7 +312,7 @@ public class SelectPlayers extends AppCompatActivity {
                     try {
                         if (mPlayerList.has("TeamPlayer2")) {
                             if (etName.getText().length() > 0) {
-                                Log.i(this.toString(), "Team Player 2 name is " + etName.getText().toString());
+//                                Log.i(this.toString(), "Team Player 2 name is " + etName.getText().toString());
                                 if (!etName.getText().toString().equalsIgnoreCase(mPlayerList.getJSONObject("TeamPlayer2").getString("name"))) {
                                     JSONObject details = new JSONObject();
                                     details.put("name", etName.getText().toString());
@@ -322,12 +320,12 @@ public class SelectPlayers extends AppCompatActivity {
                                 }
                                 etName.setText("");
                             } else {
-                                Log.i(this.toString(), "Team Player 2 has no name");
+//                                Log.i(this.toString(), "Team Player 2 has no name");
                                 mPlayerList.remove("TeamPlayer2");
                             }
                         } else {
                             if (etName.getText().length() > 0) {
-                                Log.i(this.toString(), "Team Player 2 name is " + etName.getText().toString());
+//                                Log.i(this.toString(), "Team Player 2 name is " + etName.getText().toString());
                                 JSONObject details = new JSONObject();
                                 details.put("name", etName.getText().toString());
                                 mPlayerList.put("TeamPlayer2", details);
@@ -342,7 +340,7 @@ public class SelectPlayers extends AppCompatActivity {
             }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    Log.i(this.toString(), "Team Player 2 name cancelled");
+//                    Log.i(this.toString(), "Team Player 2 name cancelled");
                     ((ViewGroup) player_name_dialog.getParent()).removeAllViews();
                 }
             });
@@ -374,7 +372,7 @@ public class SelectPlayers extends AppCompatActivity {
                     try {
                         if (mPlayerList.has("OpponentPlayer1")) {
                             if (etName.getText().length() > 0) {
-                                Log.i(this.toString(), "Opponent Player 1 name is " + etName.getText().toString());
+//                                Log.i(this.toString(), "Opponent Player 1 name is " + etName.getText().toString());
                                 if (!etName.getText().toString().equalsIgnoreCase(mPlayerList.getJSONObject("OpponentPlayer1").getString("name"))) {
                                     JSONObject details = new JSONObject();
                                     details.put("name", etName.getText().toString());
@@ -382,12 +380,12 @@ public class SelectPlayers extends AppCompatActivity {
                                 }
                                 etName.setText("");
                             } else {
-                                Log.i(this.toString(), "Opponent Player 1 has no name");
+//                                Log.i(this.toString(), "Opponent Player 1 has no name");
                                 mPlayerList.remove("OpponentPlayer1");
                             }
                         } else {
                             if (etName.getText().length() > 0) {
-                                Log.i(this.toString(), "Opponent Player 1 name is " + etName.getText().toString());
+//                                Log.i(this.toString(), "Opponent Player 1 name is " + etName.getText().toString());
                                 JSONObject details = new JSONObject();
                                 details.put("name", etName.getText().toString());
                                 mPlayerList.put("OpponentPlayer1", details);
@@ -402,7 +400,7 @@ public class SelectPlayers extends AppCompatActivity {
             }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    Log.i(this.toString(), "Opponent Player 1 name cancelled");
+//                    Log.i(this.toString(), "Opponent Player 1 name cancelled");
                     ((ViewGroup) player_name_dialog.getParent()).removeAllViews();
                 }
             });
@@ -442,7 +440,7 @@ public class SelectPlayers extends AppCompatActivity {
                                 }
                                 etName.setText("");
                             } else {
-                                Log.i(this.toString(), "Opponent Player 2 has no name");
+//                                Log.i(this.toString(), "Opponent Player 2 has no name");
                                 mPlayerList.remove("OpponentPlayer2");
                             }
                         } else {
@@ -462,7 +460,7 @@ public class SelectPlayers extends AppCompatActivity {
             }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    Log.i(this.toString(), "Opponent Player 2 name cancelled");
+//                    Log.i(this.toString(), "Opponent Player 2 name cancelled");
                     ((ViewGroup) player_name_dialog.getParent()).removeAllViews();
                 }
             });

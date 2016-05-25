@@ -6,7 +6,6 @@ import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -34,8 +33,6 @@ public class NewMatch extends AppCompatActivity implements DatePickerDialog.OnDa
     static final int PICK_PLAYERS = 1;
 
     private Button btnDatePicker;
-//    private Button btnSubmitMatch;
-//    private Button btnSelectPlayers;
 
     private EditText etTeamScore;
     private EditText etOpponentScore;
@@ -55,8 +52,6 @@ public class NewMatch extends AppCompatActivity implements DatePickerDialog.OnDa
         setContentView(R.layout.activity_new_match);
 
         btnDatePicker = (Button) findViewById(R.id.date_picker);
-//        final Button btnSubmitMatch = (Button) findViewById(R.id.submit_match);
-//        final Button btnSelectPlayers = (Button) findViewById(R.id.select_players);
         etTeamScore = (EditText) findViewById(R.id.team_score);
         etOpponentScore = (EditText) findViewById(R.id.opponent_score);
 
@@ -93,12 +88,12 @@ public class NewMatch extends AppCompatActivity implements DatePickerDialog.OnDa
         switch (view.getId()) {
             case R.id.radio_2v2:
                 if (checked) {
-                    Log.i(this.toString(), "Match type: Doubles");
+//                    Log.i(this.toString(), "Match type: Doubles");
                     mMatchType = 1;
                 }
                 break;
             default:
-                Log.i(this.toString(), "Match type: Singles");
+//                Log.i(this.toString(), "Match type: Singles");
                 mMatchType = 0;
                 break;
         }
@@ -175,7 +170,7 @@ public class NewMatch extends AppCompatActivity implements DatePickerDialog.OnDa
                             final String MsgFull = ErrMsgFull.getJSONObject("error").getString("message");
                             final String Msg = MsgFull.substring(MsgFull.indexOf(":") + 1).trim();
                             showToastError(Msg);
-                            Log.i(this.toString(), "Response error message: " + volleyError.getMessage());
+//                            Log.i(this.toString(), "Response error message: " + volleyError.getMessage());
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -194,7 +189,7 @@ public class NewMatch extends AppCompatActivity implements DatePickerDialog.OnDa
                 new GraphRequest.Callback() {
                     @Override
                     public void onCompleted(GraphResponse response) {
-                        Log.i(this.toString(), "Friends List Result: " + response.toString());
+//                        Log.i(this.toString(), "Friends List Result: " + response.toString());
                         try {
 //                            JSONArray mFriends = response.getJSONObject().getJSONArray("data");
                             JSONObject mSummary = response.getJSONObject().getJSONObject("summary");
@@ -212,7 +207,7 @@ public class NewMatch extends AppCompatActivity implements DatePickerDialog.OnDa
 
     @Override
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-        Log.i(this.toString(), "onDateSet: " + dayOfMonth + " " + monthOfYear + " " + year);
+//        Log.i(this.toString(), "onDateSet: " + dayOfMonth + " " + monthOfYear + " " + year);
         btnDatePicker.setText(String.format(Locale.getDefault(),"%d-%d-%d", dayOfMonth, monthOfYear, year));
     }
 
@@ -224,7 +219,7 @@ public class NewMatch extends AppCompatActivity implements DatePickerDialog.OnDa
             int year = calendar.get(Calendar.YEAR);
             int month = calendar.get(Calendar.MONTH) + 1;
             int day = calendar.get(Calendar.DAY_OF_MONTH);
-            Log.i(this.toString(), "onCreateDialog: " + day + " " + month + " " + year);
+//            Log.i(this.toString(), "onCreateDialog: " + day + " " + month + " " + year);
             return new DatePickerDialog(getActivity(),(NewMatch)getActivity(),year,month,day);
         }
     }

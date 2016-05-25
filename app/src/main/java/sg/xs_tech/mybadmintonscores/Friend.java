@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 import android.widget.ImageView;
 
 import com.facebook.AccessToken;
@@ -24,13 +23,12 @@ public class Friend implements Parcelable {
     private String profile_picture_url = "";
     private Bitmap profile_picture = null;
 
-    public Friend(String fname) {
-        this.fname = fname;
-    }
+//    public Friend(String fname) {
+//        this.fname = fname;
+//    }
     public Friend(String id, String fname) {
         this.id = id;
         this.fname = fname;
-//        retrieveProfileBitmapURL();
     }
     protected Friend(Parcel in) {
         id = in.readString();
@@ -67,25 +65,25 @@ public class Friend implements Parcelable {
     public String getFname() {
         return fname;
     }
-    public void setFname(String fname) {
-        this.fname = fname;
-    }
-    public String getEmail() {
-        return email;
-    }
+//    public void setFname(String fname) {
+//        this.fname = fname;
+//    }
+//    public String getEmail() {
+//        return email;
+//    }
     public void setEmail(String email) {
         this.email = email;
     }
-    public String getProfile_picture_url() {
-        return profile_picture_url;
-    }
+//    public String getProfile_picture_url() {
+//        return profile_picture_url;
+//    }
     public void getProfile_picture(ImageView imageView) {
         retrieveProfileBitmapURL(imageView);
     }
     private void downloadProfileBitmap(ImageView imageView) throws ExecutionException, InterruptedException {
         if (profile_picture_url.isEmpty()) return;
         if (profile_picture != null) return;
-        Log.i(this.toString(), "Downloading Profile picture Bitmap");
+//        Log.i(this.toString(), "Downloading Profile picture Bitmap");
         profile_picture = new DownloadProfilePictureTask().execute(profile_picture_url).get();
         imageView.setImageBitmap(profile_picture);
     }
@@ -105,7 +103,7 @@ public class Friend implements Parcelable {
                             JSONObject mData = response.getJSONObject().getJSONObject("data");
                             if (mData.has("url")) {
                                 try {
-                                    Log.i(this.toString(), "Profile URL for " + fname + ": " + mData.getString("url"));
+//                                    Log.i(this.toString(), "Profile URL for " + fname + ": " + mData.getString("url"));
                                     profile_picture_url = mData.getString("url");
                                     downloadProfileBitmap(imageView);
                                 } catch (ExecutionException|InterruptedException e) {

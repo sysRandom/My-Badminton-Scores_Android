@@ -6,7 +6,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -39,7 +38,7 @@ public class Login extends AppCompatActivity {
 
         final AccessToken accessToken = AccessToken.getCurrentAccessToken();
         if (accessToken != null) {
-            Log.i(this.toString(), "Already has token: " + accessToken.getToken());
+//            Log.i(this.toString(), "Already has token: " + accessToken.getToken());
             appEventsLogger.logEvent("FACEBOOK_ALREADY_LOGGED_IN");
             finish();
         }
@@ -48,20 +47,20 @@ public class Login extends AppCompatActivity {
             loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
                 @Override
                 public void onSuccess(LoginResult loginResult) {
-                    Log.i(this.toString(), "Facebook login successful!");
+//                    Log.i(this.toString(), "Facebook login successful!");
                     appEventsLogger.logEvent("FACEBOOK_LOGIN_SUCCESS");
                     finish();
                 }
 
                 @Override
                 public void onCancel() {
-                    Log.i(this.toString(), "Facebook login cancelled!");
+//                    Log.i(this.toString(), "Facebook login cancelled!");
                     appEventsLogger.logEvent("FACEBOOK_LOGIN_CANCELLED");
                 }
 
                 @Override
                 public void onError(FacebookException error) {
-                    Log.e(this.toString(), "Facebook login error: " + error.toString());
+//                    Log.e(this.toString(), "Facebook login error: " + error.toString());
                     appEventsLogger.logEvent("FACEBOOK_LOGIN_ERROR");
                 }
             });

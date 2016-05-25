@@ -3,7 +3,6 @@ package sg.xs_tech.mybadmintonscores;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -42,24 +41,13 @@ public class MainActivity extends AppCompatActivity {
 
         btnAddMatch = (Button) findViewById(R.id.add_match);
         btnListMatch = (Button) findViewById(R.id.view_match_history);
-//        btnAddMatch.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//            }
-//        });
-//        btnListMatch.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Log.i(this.toString(), "Listing match history");
-//            }
-//        });
 
         accessTokenTracker = new AccessTokenTracker() {
             @Override
             protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
                 if (currentAccessToken != null) {
                     try {
-                        Log.i(this.toString(), "New access token: " + currentAccessToken.getToken());
+//                        Log.i(this.toString(), "New access token: " + currentAccessToken.getToken());
                         mShowHideButtons(View.VISIBLE);
                         queryData.put("fb_app_id", getResources().getString(R.string.facebook_app_id));
                         queryData.put("fb_id", currentAccessToken.getUserId());
@@ -70,14 +58,14 @@ public class MainActivity extends AppCompatActivity {
                                 queryData, new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
-                                Log.i(this.toString(), "Login Response: " + response.toString());
+//                                Log.i(this.toString(), "Login Response: " + response.toString());
                             }
                         }, new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
                                 if (error.networkResponse != null && error.networkResponse.data != null) {
                                     VolleyError volleyError = new VolleyError(new String(error.networkResponse.data));
-                                    Log.i(this.toString(), "Response error message: " + volleyError.getMessage());
+//                                    Log.i(this.toString(), "Response error message: " + volleyError.getMessage());
                                 }
                             }
                         });
@@ -91,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         accessToken = AccessToken.getCurrentAccessToken();
         if (accessToken != null) {
             try {
-                Log.i(this.toString(), "Access token: " + accessToken.getToken());
+//                Log.i(this.toString(), "Access token: " + accessToken.getToken());
                 mShowHideButtons(View.VISIBLE);
                 queryData.put("fb_app_id", getResources().getString(R.string.facebook_app_id));
                 queryData.put("fb_id", accessToken.getUserId());
@@ -102,14 +90,14 @@ public class MainActivity extends AppCompatActivity {
                         queryData, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.i(this.toString(), "Login Response: " + response.toString());
+//                        Log.i(this.toString(), "Login Response: " + response.toString());
                     }
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         if (error.networkResponse != null && error.networkResponse.data != null) {
                             VolleyError volleyError = new VolleyError(new String(error.networkResponse.data));
-                            Log.i(this.toString(), "Response error message: " + volleyError.getMessage());
+//                            Log.i(this.toString(), "Response error message: " + volleyError.getMessage());
                         }
                     }
                 });
@@ -119,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         else {
-            Log.i(this.toString(), "There is no access token. Calling Login.");
+//            Log.i(this.toString(), "There is no access token. Calling Login.");
             Intent intent = new Intent(MainActivity.this, Login.class);
             appEventsLogger.logEvent("START_LOGIN_PAGE");
             startActivity(intent);
@@ -127,11 +115,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void mShowHideButtons(int action) {
-        Log.i(this.toString(), "Buttons action: " + action);
+//        Log.i(this.toString(), "Buttons action: " + action);
         switch (action) {
             case View.VISIBLE:
                 if (btnAddMatch.getVisibility() == View.INVISIBLE) {
-                    Log.i(this.toString(), "Setting buttons visible");
+//                    Log.i(this.toString(), "Setting buttons visible");
                     // TODO: 24/5/16 Re-enable List Match button
 //                    btnListMatch.setVisibility(View.VISIBLE);
                     btnAddMatch.setVisibility(View.VISIBLE);
@@ -139,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             default:
                 if (btnAddMatch.getVisibility() == View.VISIBLE) {
-                    Log.i(this.toString(), "Setting buttons invisible");
+//                    Log.i(this.toString(), "Setting buttons invisible");
                     btnListMatch.setVisibility(View.INVISIBLE);
                     btnAddMatch.setVisibility(View.INVISIBLE);
                 }
@@ -147,20 +135,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void newMatch(View view) {
-        Log.i(this.toString(), "Adding new match");
+//        Log.i(this.toString(), "Adding new match");
         Intent intent = new Intent(MainActivity.this, NewMatch.class);
         appEventsLogger.logEvent("START_NEW_MATCH");
         startActivity(intent);
     }
 
     public void matchHistory(View view) {
-        Log.i(this.toString(), "Listing match history");
+//        Log.i(this.toString(), "Listing match history");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.i(this.toString(), "Resumed!");
+//        Log.i(this.toString(), "Resumed!");
         if (accessToken != null) {
             mShowHideButtons(View.VISIBLE);
         }
@@ -169,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.i(this.toString(), "Destroyed!");
+//        Log.i(this.toString(), "Destroyed!");
         accessTokenTracker.stopTracking();
     }
 }
