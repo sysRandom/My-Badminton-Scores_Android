@@ -120,8 +120,7 @@ public class MainActivity extends AppCompatActivity {
             case View.VISIBLE:
                 if (btnAddMatch.getVisibility() == View.INVISIBLE) {
 //                    Log.i(this.toString(), "Setting buttons visible");
-                    // TODO: 24/5/16 Re-enable List Match button
-//                    btnListMatch.setVisibility(View.VISIBLE);
+                    btnListMatch.setVisibility(View.VISIBLE);
                     btnAddMatch.setVisibility(View.VISIBLE);
                 }
                 break;
@@ -143,6 +142,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void matchHistory(View view) {
 //        Log.i(this.toString(), "Listing match history");
+        Intent intent = new Intent(MainActivity.this,ListMatches.class);
+        appEventsLogger.logEvent("LIST_MATCHES");
+        startActivity(intent);
     }
 
     @Override
