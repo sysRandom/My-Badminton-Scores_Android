@@ -45,11 +45,13 @@
         </activity>
         <activity
             android:name=".SelectPlayers"
-            android:label="@string/select_players_title">
-        </activity>
-        <activity android:name=".FriendsList"
-            android:label="@string/friends_list_title">
-        </activity>
+            android:label="@string/select_players_title" />
+        <activity
+            android:name=".FriendsList"
+            android:label="@string/friends_list_title" />
+        <activity
+            android:name=".ListMatches"
+            android:label="@string/list_matches_title" />
     </application>
 
 </manifest>
