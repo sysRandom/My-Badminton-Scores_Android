@@ -23,9 +23,10 @@ public class Friend implements Parcelable {
     private String profile_picture_url = "";
     private Bitmap profile_picture = null;
 
-//    public Friend(String fname) {
-//        this.fname = fname;
-//    }
+    public Friend(String fname) {
+        this.fname = fname;
+    }
+
     public Friend(String id, String fname) {
         this.id = id;
         this.fname = fname;
