@@ -12,13 +12,11 @@ import java.util.ArrayList;
 
 public class FriendsList extends AppCompatActivity {
 
-    private ListView mFriendList;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friends_list);
-        mFriendList = (ListView) findViewById(R.id.friends_list);
+        final ListView mFriendList = (ListView) findViewById(R.id.friends_list);
 
         Intent intent = getIntent();
         ArrayList<Friend> friends = intent.getParcelableArrayListExtra("fbFriends");
