@@ -1,7 +1,11 @@
 package sg.xs_tech.mybadmintonscores;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -18,12 +22,20 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class ListMatches extends AppCompatActivity {
+public class ListMatches extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
+
+    private SwipeRefreshLayout swipeMatches;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_matches);
+        swipeMatches = (SwipeRefreshLayout) findViewById(R.id.swipeMatches);
+        swipeMatches.setOnRefreshListener(this);
+        getMatches();
+    }
+
+    private void getMatches() {
         final ListView lvMatchList = (ListView) findViewById(R.id.match_list);
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
         final String queryString = "?fb_id=" + accessToken.getUserId() + "&token=" + accessToken.getToken() + "&fb_app_id=" + getString(R.string.facebook_app_id);
@@ -37,6 +49,7 @@ public class ListMatches extends AppCompatActivity {
                         try {
                             final JSONArray matches = response.getJSONArray("result");
                             final ArrayList<Match> mMatchList = new ArrayList<>();
+                            mMatchList.clear();
                             int cnt = matches.length();
                             for (int i = 0; i < cnt; ++i) {
                                 JSONObject match = matches.getJSONObject(i);
@@ -50,8 +63,7 @@ public class ListMatches extends AppCompatActivity {
                                             match.getJSONObject("poster").getString("fb_id"),
                                             match.getJSONObject("poster").getString("fb_name")
                                     );
-                                }
-                                else {
+                                } else {
                                     mPoster = new Friend(
                                             match.getJSONObject("poster").getString("fb_name")
                                     );
@@ -62,7 +74,6 @@ public class ListMatches extends AppCompatActivity {
                                             match.getString("team_player1")
                                     );
                                 }
-//                                if (match.getJSONObject("team_player1").has("fb_id")) {
                                 else {
                                     mTeamPlayer1 = new Friend(
                                             match.getJSONObject("team_player1").getString("fb_id"),
@@ -76,7 +87,6 @@ public class ListMatches extends AppCompatActivity {
                                                 match.getString("team_player2")
                                         );
                                     }
-//                                    if (match.getJSONObject("team_player2").has("fb_id")) {
                                     else {
                                         mTeamPlayer2 = new Friend(
                                                 match.getJSONObject("team_player2").getString("fb_id"),
@@ -90,7 +100,6 @@ public class ListMatches extends AppCompatActivity {
                                             match.getString("opponent_player1")
                                     );
                                 }
-//                                if (match.getJSONObject("opponent_player1").has("fb_id")) {
                                 else {
                                     mOpponentPlayer1 = new Friend(
                                             match.getJSONObject("opponent_player1").getString("fb_id"),
@@ -104,7 +113,6 @@ public class ListMatches extends AppCompatActivity {
                                                 match.getString("opponent_player2")
                                         );
                                     }
-//                                    if (match.getJSONObject("opponent_player2").has("fb_id")) {
                                     else {
                                         mOpponentPlayer2 = new Friend(
                                                 match.getJSONObject("opponent_player2").getString("fb_id"),
@@ -114,14 +122,24 @@ public class ListMatches extends AppCompatActivity {
 
                                 }
                                 final Match mMatch = new Match(
-                                        match.getString("id"),mTeamPlayer1,mTeamPlayer2,mOpponentPlayer1,
-                                        mOpponentPlayer2,mPoster,match.getString("match_date"),
-                                        match.getString("create_date"),match.getString("modify_date")
+                                        match.getString("id"), mTeamPlayer1, mTeamPlayer2, mOpponentPlayer1,
+                                        mOpponentPlayer2, mPoster, match.getString("match_date"),
+                                        match.getString("create_date"), match.getString("modify_date")
                                 );
                                 mMatchList.add(mMatch);
                                 final MatchAdapter matchAdapter = new MatchAdapter(getApplicationContext(), mMatchList);
                                 lvMatchList.setAdapter(matchAdapter);
+                                lvMatchList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                        Match selected = (Match) parent.getItemAtPosition(position);
+                                        Intent intent = new Intent(ListMatches.this, MatchDetailActions.class);
+                                        intent.putExtra("match", selected);
+                                        startActivity(intent);
+                                    }
+                                });
                             }
+                            swipeMatches.setRefreshing(false);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -139,6 +157,7 @@ public class ListMatches extends AppCompatActivity {
                                 showToastError(Msg);
 //                                Log.i(this.toString(), "Response error message: " + volleyError.getMessage());
                             }
+                            swipeMatches.setRefreshing(false);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -204,5 +223,10 @@ public class ListMatches extends AppCompatActivity {
                 msg = getString(R.string.server_error);
         }
         Toast.makeText(ListMatches.this, msg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onRefresh() {
+        getMatches();
     }
 }
