@@ -29,6 +29,43 @@ public class Match implements Parcelable {
         this.modify_date = modify_date;
     }
 
+    public Friend getTeam_player1() {
+        return team_player1;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public Friend getTeam_player2() {
+        return team_player2;
+
+    }
+
+    public Friend getOpponent_player1() {
+        return opponent_player1;
+    }
+
+    public Friend getOpponent_player2() {
+        return opponent_player2;
+    }
+    
+    public String getMatch_date() {
+        return match_date;
+    }
+
+    private Match(Parcel in) {
+        id = in.readString();
+        team_player1 = in.readParcelable(Friend.class.getClassLoader());
+        team_player2 = in.readParcelable(Friend.class.getClassLoader());
+        opponent_player1 = in.readParcelable(Friend.class.getClassLoader());
+        opponent_player2 = in.readParcelable(Friend.class.getClassLoader());
+        poster = in.readParcelable(Friend.class.getClassLoader());
+        match_date = in.readString();
+        create_date = in.readString();
+        modify_date = in.readString();
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -38,15 +75,15 @@ public class Match implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
     }
 
-    public static final Creator<Friend> CREATOR = new Creator<Friend>() {
+    public static final Creator<Match> CREATOR = new Creator<Match>() {
         @Override
-        public Friend createFromParcel(Parcel in) {
-            return new Friend(in);
+        public Match createFromParcel(Parcel in) {
+            return new Match(in);
         }
 
         @Override
-        public Friend[] newArray(int size) {
-            return new Friend[size];
+        public Match[] newArray(int size) {
+            return new Match[size];
         }
     };
 }

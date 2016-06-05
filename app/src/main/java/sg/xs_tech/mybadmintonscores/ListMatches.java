@@ -2,6 +2,7 @@ package sg.xs_tech.mybadmintonscores;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -23,6 +24,7 @@ public class ListMatches extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_matches);
+        final ListView lvMatchList = (ListView) findViewById(R.id.match_list);
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
         final String queryString = "?fb_id=" + accessToken.getUserId() + "&token=" + accessToken.getToken() + "&fb_app_id=" + getString(R.string.facebook_app_id);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
@@ -117,6 +119,8 @@ public class ListMatches extends AppCompatActivity {
                                         match.getString("create_date"),match.getString("modify_date")
                                 );
                                 mMatchList.add(mMatch);
+                                final MatchAdapter matchAdapter = new MatchAdapter(getApplicationContext(), mMatchList);
+                                lvMatchList.setAdapter(matchAdapter);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
