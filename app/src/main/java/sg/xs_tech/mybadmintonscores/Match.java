@@ -37,8 +37,13 @@ public class Match implements Parcelable {
         return id;
     }
 
+    public Friend getPoster() {
+        return poster;
+    }
+
     public Friend getTeam_player2() {
         return team_player2;
+
 
     }
 
@@ -49,7 +54,7 @@ public class Match implements Parcelable {
     public Friend getOpponent_player2() {
         return opponent_player2;
     }
-    
+
     public String getMatch_date() {
         return match_date;
     }

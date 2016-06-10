@@ -37,7 +37,7 @@ public class ListMatches extends AppCompatActivity implements SwipeRefreshLayout
 
     private void getMatches() {
         final ListView lvMatchList = (ListView) findViewById(R.id.match_list);
-        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        final AccessToken accessToken = AccessToken.getCurrentAccessToken();
         final String queryString = "?fb_id=" + accessToken.getUserId() + "&token=" + accessToken.getToken() + "&fb_app_id=" + getString(R.string.facebook_app_id);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
                 getString(R.string.get_matches_api_url) + queryString,
@@ -135,6 +135,9 @@ public class ListMatches extends AppCompatActivity implements SwipeRefreshLayout
                                         Match selected = (Match) parent.getItemAtPosition(position);
                                         Intent intent = new Intent(ListMatches.this, MatchDetailActions.class);
                                         intent.putExtra("match", selected);
+                                        if (selected.getPoster().getId().equalsIgnoreCase(accessToken.getUserId())) {
+                                            intent.putExtra("isCreator", true);
+                                        }
                                         startActivity(intent);
                                     }
                                 });
