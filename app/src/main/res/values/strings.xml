@@ -45,11 +45,13 @@
     <string name="list_match_button">View Match History</string>
     <string name="view_match_detail">Match Detail</string>
     <string name="edit_match_detail">Update Match</string>
+    <string name="edit_match_submit_match">Update Match</string>
 
     // Error messages
     <string name="missing_fb_app_id">Unauthorised Application</string>
     <string name="missing_token">Unauthorised Access</string>
     <string name="missing_identification">Unauthorised Access</string>
+    <string name="not_match_creator">You cannot update this match detail</string>
     <string name="invalid_score">Invalid Score Entered</string>
     <string name="invalid_team_score">Invalid Team Score</string>
     <string name="invalid_opponent_score">Invalid Opponent Score</string>

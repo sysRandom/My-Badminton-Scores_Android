@@ -54,7 +54,7 @@
             android:label="@string/list_matches_title" />
         <activity
             android:name=".MatchDetailActions"
-            android:label="@string/view_match_detail" />
+            android:label="@string/edit_match_detail" />
     </application>
 
 </manifest>
