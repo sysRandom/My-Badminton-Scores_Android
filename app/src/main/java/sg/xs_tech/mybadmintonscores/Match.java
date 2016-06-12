@@ -16,6 +16,11 @@ public class Match implements Parcelable {
     private String match_date;
     private String create_date;
     private String modify_date;
+    private int match_type;
+
+    public int getMatch_type() {
+        return match_type;
+    }
 
     public Match(String id, Friend team_player1, Friend team_player2, int team_score, Friend opponent_player1,
                  Friend opponent_player2, int opponent_score, Friend poster, String match_date, String create_date,
@@ -30,7 +35,9 @@ public class Match implements Parcelable {
         this.poster = poster;
         this.match_date = match_date;
         this.create_date = create_date;
+
         this.modify_date = modify_date;
+        this.match_type = (!team_player2.getFname().isEmpty() && !opponent_player2.getFname().isEmpty()) ? 1 : 0;
     }
 
     public Friend getTeam_player1() {
