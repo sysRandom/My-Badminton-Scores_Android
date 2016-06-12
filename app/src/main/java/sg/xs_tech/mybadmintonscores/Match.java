@@ -8,21 +8,25 @@ public class Match implements Parcelable {
     private String id;
     private Friend team_player1;
     private Friend team_player2;
+    private int team_score;
     private Friend opponent_player1;
     private Friend opponent_player2;
+    private int opponent_score;
     private Friend poster;
     private String match_date;
     private String create_date;
     private String modify_date;
 
-    public Match(String id, Friend team_player1, Friend team_player2, Friend opponent_player1,
-                 Friend opponent_player2, Friend poster, String match_date, String create_date,
+    public Match(String id, Friend team_player1, Friend team_player2, int team_score, Friend opponent_player1,
+                 Friend opponent_player2, int opponent_score, Friend poster, String match_date, String create_date,
                  String modify_date) {
         this.id = id;
         this.team_player1 = team_player1;
         this.team_player2 = team_player2;
+        this.team_score = team_score;
         this.opponent_player1 = opponent_player1;
         this.opponent_player2 = opponent_player2;
+        this.opponent_score = opponent_score;
         this.poster = poster;
         this.match_date = match_date;
         this.create_date = create_date;
@@ -43,8 +47,14 @@ public class Match implements Parcelable {
 
     public Friend getTeam_player2() {
         return team_player2;
+    }
 
+    public int getTeam_score() {
+        return team_score;
+    }
 
+    public int getOpponent_score() {
+        return opponent_score;
     }
 
     public Friend getOpponent_player1() {

@@ -58,6 +58,8 @@ public class ListMatches extends AppCompatActivity implements SwipeRefreshLayout
                                 Friend mTeamPlayer2 = null;
                                 Friend mOpponentPlayer1;
                                 Friend mOpponentPlayer2 = null;
+                                final int mTeamScore = match.getInt("team_score");
+                                final int mOpponentScore = match.getInt("opponent_score");
                                 if (match.getJSONObject("poster").has("fb_id")) {
                                     mPoster = new Friend(
                                             match.getJSONObject("poster").getString("fb_id"),
@@ -122,8 +124,8 @@ public class ListMatches extends AppCompatActivity implements SwipeRefreshLayout
 
                                 }
                                 final Match mMatch = new Match(
-                                        match.getString("id"), mTeamPlayer1, mTeamPlayer2, mOpponentPlayer1,
-                                        mOpponentPlayer2, mPoster, match.getString("match_date"),
+                                        match.getString("id"), mTeamPlayer1, mTeamPlayer2, mTeamScore, mOpponentPlayer1,
+                                        mOpponentPlayer2, mOpponentScore, mPoster, match.getString("match_date"),
                                         match.getString("create_date"), match.getString("modify_date")
                                 );
                                 mMatchList.add(mMatch);

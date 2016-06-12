@@ -10,12 +10,36 @@
 
     <TextView
         android:id="@+id/match_date"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:textSize="16sp"
-        android:textColor="@android:color/black"/>
+        android:textColor="@android:color/black"
+        android:textAlignment="center"
+        android:textAppearance="@android:style/TextAppearance.Large" />
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="10dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/select_players_team"
+            android:textColor="@android:color/black"
+            android:textAppearance="@android:style/TextAppearance.Large" />
+
+        <TextView
+            android:id="@+id/match_team_score"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:textAppearance="@android:style/TextAppearance.Large"
+            android:gravity="right" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/match_team_player1"
@@ -23,8 +47,8 @@
         android:layout_height="wrap_content"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:textSize="16sp"
-        android:textColor="@android:color/black"/>
+        android:textColor="@android:color/black"
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/match_team_player2"
@@ -32,9 +56,34 @@
         android:layout_height="wrap_content"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
+        android:textColor="@android:color/black"
         android:textSize="16sp"
-        android:visibility="gone"
-        android:textColor="@android:color/black"/>
+        android:visibility="gone" />
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="10dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/select_players_opponent"
+            android:textColor="@android:color/black"
+            android:textAppearance="@android:style/TextAppearance.Large" />
+
+        <TextView
+            android:id="@+id/match_opponent_score"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:textAppearance="@android:style/TextAppearance.Large"
+            android:gravity="right" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/match_opponent_player1"
@@ -42,8 +91,8 @@
         android:layout_height="wrap_content"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:textSize="16sp"
-        android:textColor="@android:color/black"/>
+        android:textColor="@android:color/black"
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/match_opponent_player2"
@@ -51,9 +100,9 @@
         android:layout_height="wrap_content"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
+        android:textColor="@android:color/black"
         android:textSize="16sp"
-        android:visibility="gone"
-        android:textColor="@android:color/black"/>
+        android:visibility="gone" />
 
     <Space
         android:layout_width="wrap_content"

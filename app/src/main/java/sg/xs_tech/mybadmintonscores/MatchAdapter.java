@@ -17,7 +17,6 @@ public class MatchAdapter extends ArrayAdapter<Match> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        final Match selected = getItem(position);
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.activity_matches_detail, parent, false);
         }
@@ -26,16 +25,21 @@ public class MatchAdapter extends ArrayAdapter<Match> {
         final TextView mTeamPlayer2 = (TextView) convertView.findViewById(R.id.match_team_player2);
         final TextView mOpponentPlayer1 = (TextView) convertView.findViewById(R.id.match_opponent_player1);
         final TextView mOpponentPlayer2 = (TextView) convertView.findViewById(R.id.match_opponent_player2);
+        final TextView mTeamScore = (TextView) convertView.findViewById(R.id.match_team_score);
+        final TextView mOpponentScore = (TextView) convertView.findViewById(R.id.match_opponent_score);
 
+        final Match selected = getItem(position);
         mMatchDate.setText(String.format(Locale.getDefault(), "Match Date: %s", selected.getMatch_date()));
-        mTeamPlayer1.setText(String.format(Locale.getDefault(), "Team Player 1: %s", selected.getTeam_player1().getFname()));
-        mOpponentPlayer1.setText(String.format(Locale.getDefault(), "Opponent Player 1: %s", selected.getOpponent_player1().getFname()));
+        mTeamScore.setText(String.format(Locale.getDefault(), "Score: %d", selected.getTeam_score()));
+        mOpponentScore.setText(String.format(Locale.getDefault(), "Score: %d", selected.getOpponent_score()));
+        mTeamPlayer1.setText(String.format(Locale.getDefault(), "Player 1: %s", selected.getTeam_player1().getFname()));
+        mOpponentPlayer1.setText(String.format(Locale.getDefault(), "Player 1: %s", selected.getOpponent_player1().getFname()));
         if (selected.getTeam_player2() != null) {
-            mTeamPlayer2.setText(String.format(Locale.getDefault(), "Team Player 2: %s", selected.getTeam_player2().getFname()));
+            mTeamPlayer2.setText(String.format(Locale.getDefault(), "Player 2: %s", selected.getTeam_player2().getFname()));
             mTeamPlayer2.setVisibility(View.VISIBLE);
         }
         if (selected.getOpponent_player2() != null) {
-            mOpponentPlayer2.setText(String.format(Locale.getDefault(), "Opponent Player 2: %s", selected.getOpponent_player2().getFname()));
+            mOpponentPlayer2.setText(String.format(Locale.getDefault(), "Player 2: %s", selected.getOpponent_player2().getFname()));
             mOpponentPlayer2.setVisibility(View.VISIBLE);
         }
 

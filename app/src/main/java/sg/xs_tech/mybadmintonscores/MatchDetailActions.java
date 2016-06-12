@@ -10,12 +10,12 @@ public class MatchDetailActions extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
+        Match mMatch = intent.getParcelableExtra("match");
         if (intent.hasExtra("isCreator") && intent.getBooleanExtra("isCreator",false) == true) {
             setContentView(R.layout.activity_match_detail_actions);
         }
         else {
-            setContentView(R.layout.activity_match_detail_view);
+//            setContentView(R.layout.activity_match_detail_view);
         }
-        Match mMatch = intent.getParcelableExtra("match");
     }
 }

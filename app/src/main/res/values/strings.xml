@@ -4,6 +4,7 @@
     <string name="login_title">Social Media Login</string>
     <string name="new_match_title">Add New Match</string>
     <string name="list_matches_title">Match List</string>
+
     <string name="facebook_app_id">467811920086939</string>
     <string name="member_login_api_url">https://devel.xs-tech.sg/api/public/member/login</string>
     <string name="member_update_api_url">https://devel.xs-tech.sg/api/public/member/update</string>
@@ -42,6 +43,8 @@
 
     // Match History view
     <string name="list_match_button">View Match History</string>
+    <string name="view_match_detail">Match Detail</string>
+    <string name="edit_match_detail">Update Match</string>
 
     // Error messages
     <string name="missing_fb_app_id">Unauthorised Application</string>
