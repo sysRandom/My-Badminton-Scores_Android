@@ -75,8 +75,7 @@ public class ListMatches extends AppCompatActivity implements SwipeRefreshLayout
                                     mTeamPlayer1 = new Friend(
                                             match.getString("team_player1")
                                     );
-                                }
-                                else {
+                                } else {
                                     mTeamPlayer1 = new Friend(
                                             match.getJSONObject("team_player1").getString("fb_id"),
                                             match.getJSONObject("team_player1").getString("fb_name")
@@ -88,8 +87,7 @@ public class ListMatches extends AppCompatActivity implements SwipeRefreshLayout
                                         mTeamPlayer2 = new Friend(
                                                 match.getString("team_player2")
                                         );
-                                    }
-                                    else {
+                                    } else {
                                         mTeamPlayer2 = new Friend(
                                                 match.getJSONObject("team_player2").getString("fb_id"),
                                                 match.getJSONObject("team_player2").getString("fb_name")
@@ -101,8 +99,7 @@ public class ListMatches extends AppCompatActivity implements SwipeRefreshLayout
                                     mOpponentPlayer1 = new Friend(
                                             match.getString("opponent_player1")
                                     );
-                                }
-                                else {
+                                } else {
                                     mOpponentPlayer1 = new Friend(
                                             match.getJSONObject("opponent_player1").getString("fb_id"),
                                             match.getJSONObject("opponent_player1").getString("fb_name")
@@ -114,8 +111,7 @@ public class ListMatches extends AppCompatActivity implements SwipeRefreshLayout
                                         mOpponentPlayer2 = new Friend(
                                                 match.getString("opponent_player2")
                                         );
-                                    }
-                                    else {
+                                    } else {
                                         mOpponentPlayer2 = new Friend(
                                                 match.getJSONObject("opponent_player2").getString("fb_id"),
                                                 match.getJSONObject("opponent_player2").getString("fb_name")
@@ -135,12 +131,14 @@ public class ListMatches extends AppCompatActivity implements SwipeRefreshLayout
                                     @Override
                                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                         Match selected = (Match) parent.getItemAtPosition(position);
-                                        Intent intent = new Intent(ListMatches.this, MatchDetailActions.class);
-                                        intent.putExtra("match", selected);
                                         if (selected.getPoster().getId().equalsIgnoreCase(accessToken.getUserId())) {
-                                            intent.putExtra("isCreator", true);
+                                            Intent intent = new Intent(ListMatches.this, MatchDetailActions.class);
+                                            intent.putExtra("match", selected);
+//                                            intent.putExtra("isCreator", true);
+                                            startActivity(intent);
+                                        } else {
+                                            showToastError("not_match_creator");
                                         }
-                                        startActivity(intent);
                                     }
                                 });
                             }
@@ -185,6 +183,8 @@ public class ListMatches extends AppCompatActivity implements SwipeRefreshLayout
             case "missing_identification":
                 msg = getString(R.string.missing_identification);
                 break;
+            case "not_match_creator":
+                msg = getString(R.string.not_match_creator);
             case "invalid_score":
                 msg = getString(R.string.invalid_score);
                 break;
