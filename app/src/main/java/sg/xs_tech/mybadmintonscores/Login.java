@@ -1,9 +1,6 @@
 package sg.xs_tech.mybadmintonscores;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
@@ -17,8 +14,6 @@ import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
 public class Login extends AppCompatActivity {
-    private ConnectivityManager connectivityManager;
-    private NetworkInfo networkInfo;
 
     private CallbackManager callbackManager;
 
@@ -26,9 +21,6 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        networkInfo = connectivityManager.getActiveNetworkInfo();
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         final AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(getApplicationContext());
