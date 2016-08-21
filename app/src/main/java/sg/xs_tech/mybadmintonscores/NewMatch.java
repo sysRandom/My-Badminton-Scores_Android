@@ -6,6 +6,7 @@ import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -13,6 +14,7 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -27,7 +29,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 public class NewMatch extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     static final int PICK_PLAYERS = 1;
@@ -101,6 +105,7 @@ public class NewMatch extends AppCompatActivity implements DatePickerDialog.OnDa
 
     public void onSubmitMatch(View view) {
         try {
+            final String TAG = "mybadmintonscores.onSubmitMatch";
             final JSONObject queryData = new JSONObject();
             mTeamScore = 0;
             mOpponentScore = 0;
@@ -176,8 +181,19 @@ public class NewMatch extends AppCompatActivity implements DatePickerDialog.OnDa
                         e.printStackTrace();
                     }
                 }
-            });
-            Volley.newRequestQueue(getApplicationContext()).add(jsonObjectRequest);
+            }) {
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    byte[] auth = (accessToken.getUserId() + ':' + accessToken.getToken()).getBytes();
+                    final String inBase64 = Base64.encodeToString(auth, Base64.DEFAULT);
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put("Content-Type", "application/json");
+                    params.put("Authorization", "Basic " + inBase64);
+                    params.put("Application", getResources().getString(R.string.facebook_app_id));
+                    return params;
+                }
+            };
+            VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsonObjectRequest, TAG);
+//            Volley.newRequestQueue(getApplicationContext()).add(jsonObjectRequest);
         } catch (JSONException e) {
             e.printStackTrace();
         }
